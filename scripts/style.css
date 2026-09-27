@@ -30,3 +30,8 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}
 .card span{font-size:14px;color:var(--blue)}
 .small{font-size:14px}
 footer{max-width:980px;margin:0 auto;padding:0 16px 40px;color:var(--soft);font-size:13px}
+@media (max-width:700px){
+  .top{position:static}
+  .top nav{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:4px}
+  .top nav a{white-space:nowrap}
+}
