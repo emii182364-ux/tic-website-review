@@ -9,6 +9,7 @@ Review of [taipeichurch.org](https://www.taipeichurch.org) with step-by-step fix
 | `content/1-website-review.md` | Full review: errors, conflicting information, features, recommendations |
 | `content/2-fix-report-1.md` | Fix Report #1: text, links, SEO, questions and options for the church |
 | `content/3-fix-report-2.md` | Fix Report #2: image descriptions, Google listing, page addresses, Chinese draft |
+| `preview/` | Copy of taipeichurch.org with the fixes from Fix Reports #1 and #2 applied (preview only) |
 
 The website and the Word documents are **generated** from these Markdown files. Edit only `content/`.
 
