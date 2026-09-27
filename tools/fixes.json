@@ -1,0 +1,238 @@
+{
+ "text": [
+  [
+   "who you can help you",
+   "who can help you",
+   "\"who you can help you\" -> \"who can help you\"",
+   [
+    "groups",
+    "whatshappening"
+   ]
+  ],
+  [
+   ">MENS</span>",
+   ">MEN&#39;S</span>",
+   "\"MENS GROUP\" -> \"MEN'S GROUP\"",
+   [
+    "whatshappening"
+   ]
+  ],
+  [
+   "Montly",
+   "Monthly",
+   "Email subject \"Montly\" -> \"Monthly\"",
+   [
+    "groups"
+   ]
+  ],
+  [
+   "word and actions",
+   "word and action",
+   "\"word and actions\" -> \"word and action\"",
+   [
+    "home",
+    "about-us",
+    "vision"
+   ]
+  ],
+  [
+   "Alley. 7",
+   "Aly. 7",
+   "\"Alley. 7\" -> \"Aly. 7\"",
+   [
+    "home"
+   ]
+  ],
+  [
+   "TIC worship Center",
+   "TIC Worship Center",
+   "\"TIC worship Center\" -> \"TIC Worship Center\"",
+   [
+    "home"
+   ]
+  ],
+  [
+   "Worship wit us",
+   "Worship with us",
+   "Image alt \"Worship wit us\" -> \"Worship with us\"",
+   [
+    "home"
+   ]
+  ],
+  [
+   "Eric lin",
+   "Eric Lin",
+   "\"Eric lin\" -> \"Eric Lin\"",
+   [
+    "meettheteam"
+   ]
+  ],
+  [
+   "Daily Prayer Group on Line.",
+   "Daily Prayer Group on LINE.",
+   "\"Line\" -> \"LINE\"",
+   [
+    "groups"
+   ]
+  ],
+  [
+   "MONDAY Line PRAYER MEETING",
+   "MONDAY LINE PRAYER MEETING",
+   "\"Line\" -> \"LINE\"",
+   [
+    "groups"
+   ]
+  ],
+  [
+   "Monday Line Prayer meeting",
+   "Monday LINE Prayer meeting",
+   "\"Line\" -> \"LINE\"",
+   [
+    "groups"
+   ]
+  ],
+  [
+   "discussing the bible",
+   "discussing the Bible",
+   "\"bible\" -> \"Bible\"",
+   [
+    "groups"
+   ]
+  ],
+  [
+   "bible study &amp; fellowship",
+   "Bible study &amp; fellowship",
+   "\"bible\" -> \"Bible\"",
+   [
+    "groups"
+   ]
+  ],
+  [
+   "fellowship &amp; bible study",
+   "fellowship &amp; Bible study",
+   "\"bible\" -> \"Bible\"",
+   [
+    "whatshappening"
+   ]
+  ]
+ ],
+ "descriptions": {
+  "home": "Taipei International Church (TIC) is a multicultural, multigenerational, English-speaking church in Dazhi, Taipei. Sunday worship 10:30 AM in person, 11:00 AM online.",
+  "about-us": "About Taipei International Church: a non-denominational, English-speaking church in Taipei since 1957, welcoming people from every nation and background.",
+  "beliefs": "What Taipei International Church believes: the Apostles' Creed as our statement of faith and the Bible as the supreme authority in all it teaches.",
+  "vision": "The vision, mission and values of Taipei International Church: disciples who shine the light of God's love on Taipei, Taiwan and the world.",
+  "constitution": "The constitution of Taipei International Church, an English-speaking international church in Taipei, Taiwan.",
+  "history": "The history of Taipei International Church, from its first service in October 1957 to its home in Dazhi today, and the pastors who have served.",
+  "meettheteam": "Meet the pastor, staff and elders of Taipei International Church in Dazhi, Taipei.",
+  "stories": "Stories and testimonies from the Taipei International Church family about what God is doing in Taipei and around the world.",
+  "whatshappening": "What's happening at Taipei International Church: this Sunday's service, Bible studies, Worship Circle, men's and women's groups.",
+  "tic-calendar": "Calendar of services and events at Taipei International Church in Dazhi, Taipei.",
+  "families": "Families at Taipei International Church: nursery, TIC Kids (Pre-K to grade 5) and Youth Service on Sundays in Dazhi, Taipei.",
+  "giving": "Give to Taipei International Church by credit card, domestic bank transfer or overseas wire.",
+  "connect": "Meet people at Taipei International Church. Whether you are new to Taiwan or a local, join a group or a serving team.",
+  "groups": "Small groups at Taipei International Church: Bible studies, prayer meetings, young adults, men's and women's groups, and the Filipino Ministry.",
+  "serve": "Serve at Taipei International Church on the worship, welcome, tech, media, kids, youth or hospitality team.",
+  "contact": "Contact Taipei International Church: B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei. Email info@taipeichurch.org.",
+  "event-list": "Upcoming events at Taipei International Church in Taipei."
+ },
+ "alts": {
+  "08684f_33582a351f8c4587ab4abb896322d65c": "Pastor preaching to a full congregation at Taipei International Church",
+  "7dfb7a_d041d211da314be7bbdf2d7cace87a58": "Hands raised in worship over a colorful painted sky",
+  "dafe05_622bc0c9073748079c7569cf634e90f9": "Worshippers sharing communion during a Sunday service",
+  "7dfb7a_a7c2431fc29d4a049acf55e8617ea511": "Congregation seated in the TIC Worship Center during a service",
+  "7dfb7a_a40bedb921dc45bcaf0b0ffee11f46d0": "Friends smiling together at a church Christmas meal",
+  "7dfb7a_01f68000000746fba08cc174c32793e4": "Preschool children listening to their teacher in TIC Kids",
+  "7dfb7a_494561fa262543b1a448359574dd5ee4": "Kids worshipping with a teacher in the TIC Kids room",
+  "e2c18a_47319272358a404bb36977d795ed2dc7": "Children singing on stage in front of the congregation",
+  "7dfb7a_5dc2197d69c14837be18ce0e8b66f5e8": "Two women reading the Bible together in a small group",
+  "7dfb7a_9da4631d291543b9a7fb6bf9aeab0087": "Taipei city skyline with Taipei 101 and the mountains at sunset",
+  "e2c18a_741626db7ed54f70bc1abdc758f28202": "Entrance to the TIC Worship Center with the Taipei International Church sign",
+  "7dfb7a_05d588f48d7b435185e965379f138f5b": "Church members welcoming people outside under the Taipei International Church sign",
+  "7dfb7a_2d9538e47de64448acf3dfcb9fa0dae8": "Children singing on stage under the lit cross during Sunday worship",
+  "e2c18a_48b8fbbf155e44b78a1e0022a421f1fa": "Speaker with a microphone addressing the congregation",
+  "7dfb7a_6ba1b08436dc426e82a9d4eb19891326": "TIC team members standing together on stage in front of the red cross",
+  "e2c18a_f622bcf7b71f47449eff359a4f9fe4f7": "Wide view of a Sunday service in the TIC Worship Center",
+  "e2c18a_1be37d023e974c99b5909536156097db": "Worship team singing at the Christmas service",
+  "e2c18a_560fc4ac3cb342fab914c61f39b1e636": "Worship team members posing together at Christmas",
+  "e2c18a_858ccb7efb5640bf97f3c6aa19bea044": "Welcome team volunteers at the TIC welcome table",
+  "e2c18a_efbe470dfe184a9eb9dd108af3ad7acc": "Hospitality volunteers in aprons and a chef hat",
+  "e2c18a_f7c5eb6354784227a0bf23e4e5bdbca5": "Christmas service on stage in the TIC Worship Center",
+  "e2c18a_46c84591b7f74c4e8bb96169f02c086f": "Worship leader singing with the team at Christmas",
+  "e2c18a_a0d70e0a0d4748b481e9d5a1730d7d94": "Friends hugging in front of the Christmas tree",
+  "e2c18a_e3c37afc8bc64222af4529b1cc027a72": "Pastor speaking from the pulpit at the Christmas service",
+  "e2c18a_a996c0c156cf44ca8598b98284306618": "Dancers performing during the Christmas celebration",
+  "e2c18a_d073ee47a72c4c05b89abc87c2180aa4": "Children and teachers singing together at the Christmas service",
+  "e2c18a_7399e1ef69e64f4b9d426b994e90148d": "Pastor speaking to the congregation with the vision statement on screen",
+  "e2c18a_ac8c4bf7bbe0400188513ed1c888e529": "Children reading their lines at the Christmas program",
+  "e2c18a_67174bc2060f4e99af0ecb6c51f6c1c4": "Dancers performing at the Lights of Christmas celebration",
+  "e2c18a_b167e11ced70417881d3a324659f2b9a": "Youth holding cardboard testimony signs on stage",
+  "e2c18a_eac21219548a46a2a4841362eef98f43": "Church members sharing a meal at a Christmas dinner",
+  "7dfb7a_6c91ac9dc80040c8b7a61e75600d1f28": "Children doing a craft activity in the TIC Kids room",
+  "e2c18a_3ad32cfcafb34c8dbb8f4d5b1339b82f": "Taipei city skyline with Taipei 101",
+  "08684f_7df89e0c76fb4f168c2a9ae53957846c": "Photo on the Vision page",
+  "e2c18a_334c45adccf64955b1202d80aed42c65": "Man holding a cardboard testimony sign reading Accepted, Wanted, Joyful",
+  "7dfb7a_f9fb5272ddac4aad99aea99313fa9c91": "Revival banner: join us for worship at 10:30 am at the TIC Worship Center in Dazhi",
+  "7dfb7a_3291541292e248ee8454f8cd02084efd": "Group photo of participants in the TIC Worship Center",
+  "7dfb7a_2c79422b014e49d1a45c78aa6e9d2120": "Speaker presenting at a leadership event at TIC",
+  "7dfb7a_29f38c6521f74ed08a8d7cc8aed60f7b": "Participants laughing together during a session",
+  "7dfb7a_22e50e25a0c848ed8017204e8d2ee9f7": "Volunteers preparing materials at the registration table",
+  "7dfb7a_f50b1e4272d04aa9b260d19420d8a529": "Participants talking together in small groups",
+  "7dfb7a_82af42ca481f4e96828f6608c46f170a": "Participants in discussion during a group session",
+  "7dfb7a_dc4ba193d20e41c5b4d25dc5c19ac14a": "Audience watching a video session in the TIC Worship Center",
+  "7dfb7a_ba21aa106a864e0ba08743263e7e2d14": "Event name badges and booklets laid out on a table",
+  "7dfb7a_59aad780fde046f0a44355194f3158de": "Two event hosts smiling in the TIC lobby"
+ },
+ "schema": {
+  "@context": "https://schema.org",
+  "@type": "Church",
+  "name": "Taipei International Church",
+  "alternateName": [
+   "TIC",
+   "台北國際教會"
+  ],
+  "url": "https://www.taipeichurch.org/",
+  "logo": "https://static.wixstatic.com/media/8469c6_b97374b1c8c346af9672330333848dbb~mv2.png",
+  "description": "A multicultural, multigenerational, English-speaking church in Dazhi, Taipei.",
+  "email": "info@taipeichurch.org",
+  "foundingDate": "1957",
+  "address": {
+   "@type": "PostalAddress",
+   "streetAddress": "B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist.",
+   "addressLocality": "Taipei City",
+   "postalCode": "10466",
+   "addressCountry": "TW"
+  },
+  "geo": {
+   "@type": "GeoCoordinates",
+   "latitude": 25.0781275,
+   "longitude": 121.5497606
+  },
+  "event": {
+   "@type": "Event",
+   "name": "Sunday Worship Service",
+   "eventSchedule": {
+    "@type": "Schedule",
+    "byDay": "https://schema.org/Sunday",
+    "startTime": "10:30",
+    "repeatFrequency": "P1W",
+    "scheduleTimezone": "Asia/Taipei"
+   },
+   "location": {
+    "@type": "Place",
+    "name": "TIC Worship Center, B1",
+    "address": "B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei City 10466"
+   },
+   "organizer": {
+    "@type": "Church",
+    "name": "Taipei International Church"
+   }
+  },
+  "sameAs": [
+   "https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA",
+   "https://www.facebook.com/Taipei.Intl.Church/",
+   "https://www.instagram.com/tic_taipeichurch/",
+   "https://twitter.com/TIConlinechurch",
+   "https://open.spotify.com/show/6KYo14ZcT2LvSujbNx273A"
+  ]
+ }
+}
