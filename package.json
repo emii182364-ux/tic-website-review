@@ -1,0 +1,7 @@
+{
+  "name": "tic-website-review",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node scripts/build.mjs" },
+  "dependencies": { "docx": "9.5.1", "marked": "15.0.12", "image-size": "1.2.1" }
+}
