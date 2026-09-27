@@ -27,6 +27,7 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'downloads'), { recursive: true });
 fs.cpSync(path.join(CONTENT, 'images'), path.join(OUT, 'images'), { recursive: true });
 if (fs.existsSync(path.join(ROOT, 'preview'))) fs.cpSync(path.join(ROOT, 'preview'), path.join(OUT, 'preview'), { recursive: true });
+if (fs.existsSync(path.join(ROOT, 'new'))) fs.cpSync(path.join(ROOT, 'new'), path.join(OUT, 'new'), { recursive: true });
 
 // ---------- Word ----------
 const border = { style: BorderStyle.SINGLE, size: 4, color: 'D5DFE8' };
@@ -123,7 +124,7 @@ function codeBlock(text) {
 // ---------- HTML ----------
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function page({ title, body, current }) {
-  const nav = docs.map(d => `<a href="${d.slug}.html"${d.slug === current ? ' aria-current="page"' : ''}>${esc(d.title)}</a>`).join('') + '<a href="preview/index.html">Corrected preview</a>';
+  const nav = docs.map(d => `<a href="${d.slug}.html"${d.slug === current ? ' aria-current="page"' : ''}>${esc(d.title)}</a>`).join('') + '<a href="preview/index.html">Corrected preview</a><a href="new/index.html">New site proposal</a>';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -163,6 +164,9 @@ fs.writeFileSync(path.join(OUT, 'index.html'), page({
   body: `<article><p class="eyebrow">Taipei International Church</p><h1>taipeichurch.org website review</h1>
 <p>A review of taipeichurch.org with step-by-step fixes. Nothing here changes the live website: every fix is made by hand in the Wix Editor.</p>
 <ol class="cards">${cards}</ol>
+<h2>Proposal: a new mobile-first website</h2>
+<p>A new website built outside Wix with all the content, photos and corrections. It is designed for phones first, opens in English and has a 中文 (Traditional Chinese) button. It is a proposal for the church to compare; the official website has not been changed.</p>
+<p><a class="btn" href="new/index.html">Open the new website proposal</a></p>
 <h2>Preview of the corrected website</h2>
 <p>A copy of taipeichurch.org with the fixes from Fix Reports #1 and #2 already applied (text, links, page titles, Google descriptions and image descriptions). The layout is unchanged. It is a preview only: the official website has not been changed.</p>
 <p><a class="btn" href="preview/index.html">Open the corrected preview</a> <a class="small" href="preview/CHANGES.txt">List of changes</a></p>
