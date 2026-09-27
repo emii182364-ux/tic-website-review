@@ -1,0 +1,56 @@
+Changes applied to a local copy of taipeichurch.org (fetched 27 Sep 2026).
+The live website was NOT modified. Page structure was not changed.
+
+File | Change | Count
+groups.html | "who you can help you" -> "who can help you" | 1x
+whatshappening.html | "who you can help you" -> "who can help you" | 1x
+whatshappening.html | "MENS GROUP" -> "MEN'S GROUP" | 1x
+groups.html | Email subject "Montly" -> "Monthly" | 1x
+home.html | "word and actions" -> "word and action" | 4x
+about-us.html | "word and actions" -> "word and action" | 1x
+vision.html | "word and actions" -> "word and action" | 1x
+home.html | "Alley. 7" -> "Aly. 7" | 1x
+home.html | "TIC worship Center" -> "TIC Worship Center" | 1x
+home.html | Image alt "Worship wit us" -> "Worship with us" | 1x
+meettheteam.html | "Eric lin" -> "Eric Lin" | 1x
+groups.html | "Line" -> "LINE" | 1x
+groups.html | "Line" -> "LINE" | 1x
+groups.html | "Line" -> "LINE" | 1x
+groups.html | "bible" -> "Bible" | 1x
+groups.html | "bible" -> "Bible" | 1x
+whatshappening.html | "bible" -> "Bible" | 1x
+groups.html | Mailchimp tracking link -> direct Zoom link (same meeting) | 2x
+home.html | Old map link (Mingshui Rd 569, B2) -> new venue map link | 2x
+about-us.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+beliefs.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+connect.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+constitution.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+contact.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+event-list.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+families.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+giving.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+groups.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+history.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+home.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x
+meettheteam.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+serve.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+stories.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+tic-calendar.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+vision.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+whatshappening.html | Page title "| taipeichurch" -> "| Taipei International Church" | 3x | + added SEO description
+
+Batch 2 (Fix Report #2):
+- 47 images: alt text added (11 pages)
+- home.html: structured data changed from LocalBusiness (old address 575 Mingshui Rd) to Church with the new address
+- home.html: WebSite structured data name "taipeichurch" -> "Taipei International Church"
+
+Not changed (needs the church to decide):
+- Conflicting times (Youth Service 10:30 vs 11:00; Worship Circle 1:30 vs 2:30)
+- Wix sample events on event-list, Calendar setup
+- Personal Gmail contact on groups page
+- Mailchimp link on groups page that opens the homepage (correct target unknown)
+- "65 vs 68 years" on history page
+
+Checked and left as is (not real errors):
+- "Cente r", "HE RE", "G lobal L eadership S ummit": words split on purpose for styling; they display correctly
+- "press to zoom": hidden screen-reader hint added by the Wix gallery
