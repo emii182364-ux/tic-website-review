@@ -1,0 +1,1140 @@
+<!doctype html>
+<!--
+  Taipei International Church — Proposal 05 · "Shine the light"
+  Visual sample by Páginas Clover (design + effects only; no SEO, no security work, no real forms).
+
+  Motion kept deliberately simple so the whole page can be rebuilt with native website-builder features:
+   - Hero: static soft light rays (CSS gradients, no animation) fanning out from the lighthouse lamp of the TIC logo;
+     hero content fades / floats in once on load.
+   - Headings: solid colour with the key words in TIC yellow (dark sections) or TIC blue (light sections),
+     each element fades / floats in once when it scrolls into view; photos use a one-time "reveal".
+   - Header: fixed, transparent over the hero, solid navy after scrolling; active menu link follows the section.
+   - Highlights: static yellow highlighter on key phrases.
+   - Hover only: colour, border, shadow and image zoom changes.
+  Respects prefers-reduced-motion (nothing moves, everything visible).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taipei International Church — Shine the Light</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* ============================================================
+   Tokens
+   ============================================================ */
+:root{
+  --blue:#046EB8; --sky:#0088CB; --navy:#0B2749; --navy-d:#071B33; --yellow:#FFCB05;
+  --ink:#1B1B1B; --soft:#545454; --tint:#EEF5FA; --warm:#FFF7D6; --line:#D8E5EF;
+  --font:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ease:cubic-bezier(.2,.7,.1,1); --ease-out:cubic-bezier(.19,1,.22,1);
+  --gut:clamp(20px,5vw,56px); --maxw:1200px; --hdr:76px;
+  --r-lg:22px; --r-md:16px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:84px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;font-family:var(--font);color:var(--ink);background:#fff;line-height:1.55;font-size:17px;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,p,figure,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+.dark :focus-visible,.hero :focus-visible,.site-header :focus-visible,.mnav :focus-visible{outline-color:var(--yellow)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.skip{position:fixed;left:12px;top:12px;z-index:100;background:var(--yellow);color:var(--navy);padding:10px 16px;border-radius:999px;font-weight:700;transform:translateY(-160%);transition:transform .2s}
+.skip:focus{transform:none}
+
+.wrap{width:100%;max-width:calc(var(--maxw) + var(--gut)*2);margin-inline:auto;padding-inline:var(--gut)}
+.sec{padding-block:clamp(72px,10vw,128px);overflow:hidden;overflow:clip}
+.tint{background:var(--tint)}
+.dark{background:var(--navy);color:#fff}
+
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue)}
+.kicker::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--yellow);box-shadow:0 0 10px rgba(255,203,5,.8)}
+.dark .kicker,.on-blue .kicker{color:var(--yellow)}
+.h2{font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.02;font-weight:700;letter-spacing:-.02em;text-transform:uppercase;margin-top:14px;padding-bottom:.06em;text-wrap:balance}
+.lead{font-size:clamp(1.06rem,1.5vw,1.25rem);line-height:1.6;color:var(--soft);margin-top:20px;max-width:38em;text-wrap:pretty}
+.dark .lead,.on-blue .lead{color:rgba(255,255,255,.78)}
+.sec-head{max-width:760px;margin-bottom:clamp(36px,5vw,64px)}
+.sec-head.center{margin-inline:auto;text-align:center}
+.sec-head.center .lead{margin-inline:auto}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn{--bg:transparent;--fg:inherit;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:14px 26px;border-radius:999px;font:700 .82rem/1.1 var(--font);letter-spacing:.09em;text-transform:uppercase;text-decoration:none;background:var(--bg);color:var(--fg);border:2px solid transparent;cursor:pointer;transition:transform .3s var(--ease),background-color .3s,border-color .3s,color .3s,box-shadow .3s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-yellow{--bg:var(--yellow);--fg:var(--navy)}
+.btn-yellow:hover{box-shadow:0 10px 30px -8px rgba(255,203,5,.7)}
+.btn-ghost{--fg:#fff;border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.06)}
+.btn-ghost:hover{background:rgba(255,255,255,.14);border-color:#fff}
+.btn-blue{--bg:var(--blue);--fg:#fff}
+.btn-blue:hover{--bg:var(--navy)}
+.btn-line{--fg:var(--blue);border-color:var(--blue)}
+.btn-line:hover{--bg:var(--blue);--fg:#fff}
+.btn-white{--bg:#fff;--fg:var(--navy)}
+.live{width:9px;height:9px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 0 3px rgba(255,77,77,.25)}
+
+/* Main "shine" buttons: a static soft yellow glow (shadow), stronger on hover */
+.btn-shine{box-shadow:0 0 0 4px rgba(255,203,5,.2),0 8px 26px -8px rgba(255,203,5,.75)}
+.btn-shine:hover{box-shadow:0 0 0 6px rgba(255,203,5,.28),0 12px 34px -8px rgba(255,203,5,.9)}
+
+/* ============================================================
+   Header: fixed, transparent over the hero, solid navy after scrolling
+   ============================================================ */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:60;color:#fff}
+.site-header::before{content:"";position:absolute;inset:0;background:rgba(9,32,61,.97);border-bottom:1px solid rgba(255,255,255,.1);opacity:0;transition:opacity .35s}
+.site-header.solid::before,.menu-open .site-header::before{opacity:1}
+.bar{position:relative;display:flex;align-items:center;gap:24px;height:var(--hdr)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}
+.brand svg{width:58px;height:auto}
+.brand span{font-size:.72rem;font-weight:700;letter-spacing:.14em;line-height:1.25;text-transform:uppercase;opacity:.9}
+.nav{display:flex;gap:clamp(14px,2vw,30px);margin-left:auto}
+.nav a{padding:8px 0;font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;opacity:.86;border-bottom:2px solid transparent;transition:opacity .25s,color .25s,border-color .25s}
+.nav a:hover,.nav a.current{opacity:1;color:var(--yellow);border-bottom-color:var(--yellow)}
+.bar .btn{min-height:42px;padding:10px 18px;font-size:.74rem}
+.menu-btn{display:none;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;place-items:center;flex:none}
+.menu-btn i,.menu-btn i::before,.menu-btn i::after{display:block;width:18px;height:2px;border-radius:2px;background:currentColor;transition:transform .35s var(--ease),opacity .2s}
+.menu-btn i{position:relative}
+.menu-btn i::before,.menu-btn i::after{content:"";position:absolute;left:0}
+.menu-btn i::before{top:-6px}.menu-btn i::after{top:6px}
+.menu-open .menu-btn i{background:transparent}
+.menu-open .menu-btn i::before{transform:translateY(6px) rotate(45deg)}
+.menu-open .menu-btn i::after{transform:translateY(-6px) rotate(-45deg)}
+.mnav{position:fixed;inset:0;z-index:55;background:radial-gradient(120% 60% at 50% 0,#12406f 0,var(--navy) 55%,var(--navy-d) 100%);color:#fff;padding:calc(var(--hdr) + 24px) var(--gut) 40px;display:flex;flex-direction:column;gap:28px;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
+.menu-open .mnav{opacity:1;visibility:visible;transition:opacity .35s}
+.mnav ul{display:grid;gap:4px}
+.mnav a.l{display:flex;align-items:baseline;gap:14px;padding:10px 0;font-size:clamp(1.6rem,7vw,2.4rem);font-weight:700;text-transform:uppercase;letter-spacing:-.01em;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1)}
+.mnav a.l small{font-size:.75rem;color:var(--yellow);letter-spacing:.1em;font-weight:700}
+.mnav p{color:rgba(255,255,255,.7);font-size:.95rem}
+@media (max-width:1079px){.nav,.bar .btn{display:none}.menu-btn{display:grid;margin-left:auto}}
+@media (min-width:1080px){.mnav{display:none}}
+
+/* ============================================================
+   HERO (navy, rays, logo)
+   ============================================================ */
+.hero{position:relative;isolation:isolate;min-height:max(680px,100svh);display:flex;flex-direction:column;background:var(--navy);color:#fff;overflow:hidden}
+/* --ox/--oy = position of the lighthouse lamp of the logo (desktop: right column; phones: top centre) */
+.hero-bg{position:absolute;inset:0;z-index:-1;overflow:hidden;--ox:78%;--oy:33%;
+  background:radial-gradient(60% 55% at var(--ox) var(--oy),#1d4f86 0%,rgba(29,79,134,0) 70%),
+             radial-gradient(80% 60% at 0% 100%,#0e3460 0%,rgba(14,52,96,0) 70%),var(--navy)}
+.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.22;filter:grayscale(1) contrast(1.1)}
+.hero-bg::before{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(100deg,rgba(11,39,73,.94) 0%,rgba(11,39,73,.7) 45%,rgba(11,39,73,.45) 100%),
+             linear-gradient(to top,var(--navy) 0%,rgba(11,39,73,0) 35%)}
+
+/* Static light rays: soft conic wedges fanning out from the lamp, faded with distance.
+   No animation, so it is the same as a still background image. */
+.rays{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:conic-gradient(from 0deg at var(--ox) var(--oy),
+    rgba(255,255,255,0) 0deg 96deg,
+    rgba(124,198,242,.24) 104deg, rgba(124,198,242,0) 114deg,
+    rgba(255,255,255,0) 126deg, rgba(255,255,255,.3) 131deg, rgba(255,255,255,0) 136deg,
+    rgba(255,255,255,0) 146deg, rgba(159,214,255,.3) 153deg, rgba(159,214,255,0) 160deg,
+    rgba(255,225,122,0) 166deg, rgba(255,225,122,.3) 178deg, rgba(255,225,122,0) 192deg,
+    rgba(255,255,255,0) 200deg, rgba(255,255,255,.3) 205deg, rgba(255,255,255,0) 210deg,
+    rgba(191,230,255,0) 222deg, rgba(191,230,255,.26) 232deg, rgba(191,230,255,0) 242deg,
+    rgba(255,216,77,0) 250deg, rgba(255,216,77,.2) 264deg, rgba(255,216,77,0) 280deg,
+    rgba(255,255,255,0) 280deg 360deg);
+  -webkit-mask-image:radial-gradient(circle at var(--ox) var(--oy),#000 0%,rgba(0,0,0,.65) 30%,transparent 75%);
+          mask-image:radial-gradient(circle at var(--ox) var(--oy),#000 0%,rgba(0,0,0,.65) 30%,transparent 75%)}
+.hero-glow{position:absolute;left:var(--ox);top:var(--oy);width:46vmax;height:46vmax;margin:-23vmax 0 0 -23vmax;z-index:2;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,236,170,.3) 0%,rgba(140,200,255,.1) 30%,rgba(11,39,73,0) 65%)}
+
+.hero-inner{flex:1;display:grid;grid-template-columns:minmax(0,1fr) clamp(220px,28vw,380px);align-items:center;gap:clamp(24px,4vw,56px);padding-top:calc(var(--hdr) + 36px);padding-bottom:40px}
+.hero-copy{max-width:720px}
+.hero .kicker{font-size:.85rem;letter-spacing:.32em;color:var(--yellow)}
+.hero h1{margin-top:16px;font-size:clamp(2.3rem,5.5vw,5rem);line-height:.96;font-weight:700;letter-spacing:-.02em;text-transform:uppercase;padding-bottom:.08em}
+.hero h1 span{display:block}
+.hero-sub{margin-top:22px;font-size:clamp(.92rem,1.3vw,1.05rem);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.92)}
+.hero-sub b{color:var(--yellow);text-shadow:0 0 18px rgba(255,203,5,.55);white-space:nowrap}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.hero-links{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:22px;font-size:.84rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.hero-links a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;opacity:.85;transition:opacity .2s,color .2s}
+.hero-links a:hover{opacity:1;color:var(--yellow)}
+.hero-links svg{width:17px;height:17px}
+
+.hero-mark{position:relative;justify-self:center;width:100%;max-width:360px}
+.hero-mark svg{width:100%;height:auto;filter:drop-shadow(0 0 26px rgba(150,205,255,.25)) drop-shadow(0 18px 40px rgba(0,0,0,.25))}
+.lamp{position:absolute;left:48.6%;top:10.3%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;
+  box-shadow:0 0 12px 5px rgba(255,236,160,.9),0 0 40px 16px rgba(255,203,5,.45)}
+
+.hero-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:28px}
+.hero-foot p{max-width:560px;font-size:clamp(.95rem,1.25vw,1.08rem);line-height:1.55;color:rgba(255,255,255,.82);padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+.hero-foot p strong{color:#fff}
+.since{display:flex;align-items:center;gap:18px;flex:none}
+.since span{font-size:.75rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.since span b{display:block;font-size:1.5rem;letter-spacing:.02em;color:var(--yellow);text-shadow:0 0 16px rgba(255,203,5,.45)}
+/* Scroll cue: a static line with a yellow top segment */
+.cue{display:grid;justify-items:center;gap:10px;text-decoration:none;font-size:.62rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.cue i{display:block;width:2px;height:54px;border-radius:2px;background:linear-gradient(var(--yellow) 0 40%,rgba(255,255,255,.18) 40%)}
+
+/* Headline: solid white, key word in solid TIC yellow */
+.hero h1 .k{color:var(--yellow)}
+/* Section headings: solid colour, key words in TIC blue (light sections) or TIC yellow (dark / blue sections) */
+.sh{color:var(--navy)}
+.sh .k{color:var(--blue)}
+.dark .sh,.on-blue .sh{color:#fff}
+.dark .sh .k,.on-blue .sh .k{color:var(--yellow)}
+
+/* ============================================================
+   One-time entrance animations
+   Hero: on load (fade / float in, logo zooms in). Rest: when scrolled into view.
+   ============================================================ */
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes mark-in{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes rv-in{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  .js .hero [data-in]{opacity:0}
+  .js .ready .hero [data-in]{animation:rise 1.1s var(--ease-out) var(--d,0s) both}
+  .js .ready .hero .hero-mark[data-in]{animation-name:mark-in;animation-duration:1.4s}
+  /* animation with fill "backwards" (not transitions) so each element keeps its own hover transitions */
+  .js .rv:not(.in){opacity:0}
+  .js .rv.in{animation:rv-in 1.1s var(--ease-out) var(--d,0s) backwards}
+  /* photos: "reveal" from the bottom edge */
+  .js .rv-img{clip-path:inset(100% 0 0 0 round var(--r-lg));transition:clip-path 1.2s var(--ease-out) var(--d,0s)}
+  .js .rv-img.in{clip-path:inset(0 0 0 0 round var(--r-lg))}
+}
+
+/* Static yellow highlighter on key phrases */
+.hl{color:inherit;background-color:transparent;padding:0 .14em;margin:0 -.14em;border-radius:.3em .1em;background-repeat:no-repeat;
+  background-image:linear-gradient(rgba(255,203,5,.75),rgba(255,203,5,.75));
+  background-position:0 88%;background-size:100% 48%}
+.hl.under{background-size:100% 18%;background-position:0 96%;background-image:linear-gradient(var(--yellow),var(--yellow))}
+
+/* ============================================================
+   SUNDAYS
+   ============================================================ */
+.sundays{position:relative;background:linear-gradient(var(--navy) 0 64px,#fff 64px);padding-bottom:clamp(56px,7vw,96px)}
+.sun-card{position:relative;display:grid;grid-template-columns:1.05fr repeat(3,1fr);background:#fff;border-radius:var(--r-lg);box-shadow:0 30px 70px -30px rgba(11,39,73,.45),0 0 0 1px rgba(11,39,73,.06);overflow:hidden}
+.sun-card::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--blue),var(--sky) 40%,var(--yellow))}
+.sun-intro{padding:clamp(26px,3vw,40px);background:var(--tint);display:flex;flex-direction:column;justify-content:center}
+.sun-intro h2{margin-top:10px;font-size:clamp(1.45rem,2.2vw,1.9rem);line-height:1.05;font-weight:700;text-transform:uppercase;color:var(--navy);letter-spacing:-.01em}
+.sun-intro p{margin-top:10px;font-size:.92rem;color:var(--soft)}
+.sun-item{padding:clamp(26px,3vw,40px);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:6px;transition:background-color .35s}
+.sun-item:hover{background:#FAFCFE}
+.sun-ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--tint);color:var(--blue);margin-bottom:10px}
+.sun-ico svg{width:22px;height:22px}
+.sun-time{font-size:clamp(2rem,3vw,2.6rem);font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--navy)}
+.sun-time small{font-size:.42em;letter-spacing:.06em;margin-left:4px;color:var(--blue)}
+.sun-what{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.88rem;color:var(--blue);margin-top:6px}
+.sun-where{font-size:.95rem;color:var(--soft)}
+
+/* ============================================================
+   NEW HOME
+   ============================================================ */
+.home-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(36px,6vw,88px);align-items:center}
+.home-copy .lead + p{margin-top:16px;font-size:1.06rem;line-height:1.6;color:var(--ink)}
+.addr{display:flex;gap:16px;align-items:center;margin-top:28px;padding:18px 20px;border-radius:var(--r-md);background:#fff;font-style:normal;box-shadow:0 14px 40px -24px rgba(11,39,73,.4)}
+.addr img{width:40px;height:auto;flex:none}
+.addr b{display:block;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.addr span{font-size:.97rem;line-height:1.45}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.home-photos{position:relative;padding-bottom:16%;padding-left:8%}
+.ph{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#cfdbe6}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph-main{aspect-ratio:4/3.1}
+.ph-small{position:absolute;left:0;bottom:0;width:48%;aspect-ratio:4/3;border:6px solid var(--tint);box-shadow:0 24px 50px -20px rgba(11,39,73,.5)}
+.badge-b1{position:absolute;right:-6px;top:-18px;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;text-align:center;background:var(--yellow);color:var(--navy);font-weight:700;line-height:1;box-shadow:0 0 0 8px rgba(255,203,5,.2),0 18px 40px -14px rgba(255,170,0,.8)}
+.badge-b1 b{font-size:2rem;letter-spacing:-.03em;display:block}
+.badge-b1 small{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase}
+.walk{margin-top:clamp(40px,6vw,72px);display:grid;grid-template-columns:minmax(0,2.1fr) minmax(0,1fr);background:#fff;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 20px 60px -34px rgba(11,39,73,.45)}
+.walk img{width:100%;height:100%;object-fit:cover;min-height:220px}
+.walk figcaption{padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;justify-content:center;gap:10px}
+.walk figcaption h3{font-size:1.25rem;text-transform:uppercase;color:var(--navy);letter-spacing:.02em}
+.walk figcaption p{color:var(--soft);font-size:.98rem}
+.walk .mins{display:flex;align-items:baseline;gap:8px;color:var(--blue);font-weight:700}
+.walk .mins b{font-size:3rem;line-height:1;letter-spacing:-.04em;color:var(--navy)}
+
+/* ============================================================
+   FIRST SUNDAY
+   ============================================================ */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,1.8vw,24px);counter-reset:s}
+.step{display:flex;flex-direction:column;background:#fff;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 0 0 1px var(--line);transition:box-shadow .4s}
+.step:hover{box-shadow:0 0 0 1px var(--line),0 26px 50px -30px rgba(11,39,73,.5)}
+.step .ph img{transition:transform 1s var(--ease-out)}
+.step:hover .ph img{transform:scale(1.05)}
+.step .ph{border-radius:0;aspect-ratio:4/3}
+.step-body{position:relative;padding:22px 22px 26px;display:flex;flex-direction:column;gap:8px}
+.step h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.03em;color:var(--navy);line-height:1.25}
+.step p{font-size:.95rem;color:var(--soft);line-height:1.55}
+/* Step numbers: navy digits in a solid yellow circle that overlaps the photo */
+.step-num{display:grid;place-items:center;width:62px;height:62px;margin-top:-53px;border-radius:50%;background:var(--yellow);color:var(--navy);font-size:1.45rem;font-weight:700;line-height:1;letter-spacing:-.02em;box-shadow:0 0 0 5px #fff,0 10px 24px -8px rgba(255,170,0,.7)}
+.first-note{margin-top:clamp(28px,4vw,44px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;padding:22px 26px;border-radius:var(--r-md);background:var(--navy);color:#fff}
+.first-note p{font-size:1.02rem;color:rgba(255,255,255,.85)}
+.first-note p b{color:#fff}
+
+/* ============================================================
+   VISION: full-height navy band, skyline photo, statement fades in
+   ============================================================ */
+.vision{position:relative;background:var(--navy-d);color:#fff}
+.vision-stick{position:relative;min-height:90vh;min-height:90svh;padding-block:clamp(96px,14vw,160px);overflow:hidden;display:grid;align-content:center}
+.vision-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+.vision-stick::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,var(--navy-d) 0%,rgba(7,27,51,.6) 35%,rgba(7,27,51,.55) 65%,var(--navy-d) 100%)}
+.vision-stick::after{content:"";position:absolute;left:50%;bottom:-40vh;width:150vw;height:90vh;margin-left:-75vw;z-index:1;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,203,5,.3),rgba(255,203,5,.08) 50%,rgba(255,203,5,0))}
+.vision .wrap{position:relative;z-index:2}
+.vision-text{margin-top:22px;max-width:17em;font-size:clamp(1.9rem,min(5.4vw,8.6vh),4.6rem);line-height:1.08;font-weight:700;letter-spacing:-.025em;text-wrap:balance}
+.vision-text em{font-style:normal;color:var(--yellow);text-shadow:0 0 30px rgba(255,203,5,.55)}
+.vision-foot{margin-top:clamp(28px,5vh,48px);display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.vision-foot p{font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.meter{width:min(120px,30vw);height:2px;background:var(--yellow);border-radius:2px}
+
+/* ============================================================
+   ABOUT + MISSION
+   ============================================================ */
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,6vw,88px);align-items:center}
+.about-grid .ph{aspect-ratio:3/2.2}
+.about-quote{margin-top:24px;padding-left:18px;border-left:3px solid var(--yellow);font-size:1.06rem;color:var(--ink);line-height:1.6}
+.mission{margin-top:clamp(56px,8vw,96px)}
+.mission h3{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);margin-bottom:18px}
+.mission ol{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:2px solid var(--navy)}
+.mission li{position:relative;padding:22px 16px 18px 0;border-right:1px solid var(--line);overflow:hidden}
+.mission li + li{padding-left:18px}
+.mission li:last-child{border-right:0}
+.mission li small{display:block;font-size:.72rem;font-weight:700;letter-spacing:.16em;color:var(--blue)}
+.mission li b{display:block;margin-top:6px;font-size:clamp(1.4rem,2.6vw,2.3rem);font-weight:700;text-transform:uppercase;letter-spacing:-.02em;color:var(--navy);transition:color .35s,text-shadow .35s}
+.mission li::after{content:"";position:absolute;left:0;right:0;top:-2px;height:4px;background:var(--yellow);opacity:0;transition:opacity .35s}
+.mission li:hover::after{opacity:1}
+.mission li:hover b{color:var(--blue)}
+
+/* ============================================================
+   VALUES: cards light up (yellow border + glow) on hover
+   ============================================================ */
+.on-blue{background:linear-gradient(165deg,#0A7BC9 0%,var(--blue) 35%,#055a98 75%,#0a3f72 100%);color:#fff;position:relative}
+.on-blue::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 50% at 85% 0%,rgba(255,255,255,.14),rgba(255,255,255,0) 70%)}
+.vgrid{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.vcard{position:relative;overflow:hidden;border-radius:var(--r-lg);border:1.5px solid rgba(255,255,255,.2);background:#0a4a82;transition:border-color .35s,box-shadow .35s,background-color .35s}
+.vcard:hover{border-color:var(--yellow);background:#0c5594;box-shadow:0 0 0 4px rgba(255,203,5,.16),0 20px 44px -18px rgba(255,203,5,.55)}
+.vcard-in{position:relative;height:100%;min-height:220px;padding:clamp(22px,2.4vw,32px);display:flex;flex-direction:column}
+.v-ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:var(--yellow);margin-bottom:auto}
+.v-ico svg{width:24px;height:24px}
+.vcard h3{margin-top:26px;font-size:1.2rem;text-transform:uppercase;letter-spacing:.02em}
+.vcard p{margin-top:8px;font-size:.98rem;line-height:1.55;color:rgba(255,255,255,.8)}
+.vcard q{display:block;margin-top:8px;font-size:1.05rem;line-height:1.45;color:#fff;font-weight:700;quotes:"“" "”"}
+.vcard.nums{background:var(--navy)}
+.vcard.nums .vcard-in{justify-content:center;gap:14px}
+.num-row{display:flex;align-items:baseline;gap:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.12)}
+.num-row:last-child{border-bottom:0;padding-bottom:0}
+.num-row b{font-size:clamp(2rem,3.2vw,2.6rem);line-height:1;letter-spacing:-.03em;color:var(--yellow);min-width:3.1em;text-shadow:0 0 22px rgba(255,203,5,.4)}
+.num-row span{font-size:.82rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.82)}
+
+/* ============================================================
+   FAMILIES
+   ============================================================ */
+.fam-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(36px,6vw,88px);align-items:center}
+.fam-photos{position:relative;padding-right:14%;padding-bottom:12%}
+.fam-photos .ph-main{aspect-ratio:4/3.3}
+.fam-photos .ph-small{left:auto;right:0;bottom:0;width:46%;border-color:#fff}
+.fam-cards{display:grid;gap:14px;margin-top:28px}
+.fam-card{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;padding:20px 22px;border-radius:var(--r-md);background:var(--tint);border:1px solid transparent;transition:border-color .3s,background-color .3s}
+.fam-card:hover{border-color:var(--sky);background:#fff}
+.fam-card .tag{grid-row:span 2;align-self:start;min-width:84px;padding:8px 10px;border-radius:12px;background:var(--navy);color:#fff;text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1.3}
+.fam-card .tag b{display:block;font-size:1rem;letter-spacing:0;color:var(--yellow)}
+.fam-card h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.03em;color:var(--navy)}
+.fam-card p{font-size:.96rem;color:var(--soft);line-height:1.5}
+.fam-note{margin-top:20px;display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--soft)}
+.fam-note svg{width:22px;height:22px;flex:none;color:var(--blue);margin-top:1px}
+
+/* ============================================================
+   CONNECT / GROUPS
+   ============================================================ */
+.con-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,5vw,72px);align-items:start}
+.con-photos{position:sticky;top:96px;display:grid;gap:14px}
+.con-photos .ph{aspect-ratio:16/11}
+.con-photos .ph:nth-child(2){width:72%;margin-left:auto;margin-top:-22%;border:6px solid var(--tint);box-shadow:0 24px 50px -24px rgba(11,39,73,.5)}
+.groups{display:grid;border-top:2px solid var(--navy)}
+.grp{position:relative;display:grid;grid-template-columns:minmax(150px,.75fr) minmax(0,1.6fr) auto;gap:6px 22px;align-items:center;padding:20px 10px;border-bottom:1px solid var(--line);transition:background-color .35s,border-color .35s}
+.grp:hover{background:#fff;border-bottom-color:var(--yellow)}
+.grp-when b{display:block;font-size:.92rem;color:var(--navy);text-transform:uppercase;letter-spacing:.04em}
+.grp-when span{font-size:.9rem;color:var(--blue);font-weight:700}
+.grp h3{font-size:1.08rem;color:var(--ink);line-height:1.3}
+.grp p{font-size:.92rem;color:var(--soft)}
+.chip{justify-self:end;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.chip.in-person{background:#fff3c2;color:#7a5a00}
+.chip.online{background:#dcefff;color:var(--blue)}
+
+/* ============================================================
+   SERVE
+   ============================================================ */
+.serve-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,52px)}
+.serve-head .sec-head{margin-bottom:0}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(200px,26vw));gap:14px;max-height:none}
+.tile{position:relative;overflow:hidden;border-radius:var(--r-lg);background:#0a4f86;text-decoration:none;color:#fff;isolation:isolate}
+.tile:first-child{grid-column:span 2;grid-row:span 2}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease-out)}
+.tile::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(7,27,51,.88) 0%,rgba(7,27,51,.15) 55%,rgba(7,27,51,0) 100%)}
+.tile:hover img{transform:scale(1.06)}
+.tile span{position:absolute;left:20px;right:20px;bottom:18px;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:clamp(1rem,1.6vw,1.25rem);font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.tile span i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--yellow);color:var(--navy);flex:none;transition:background-color .3s}
+.tile:hover span i{background:#fff}
+.tile span svg{width:16px;height:16px}
+
+/* ============================================================
+   STORIES: photo with a static warm pool of light (gradient overlay)
+   ============================================================ */
+.stories{background:var(--navy);color:#fff;padding-bottom:clamp(72px,10vw,120px)}
+.scene{position:relative;overflow:hidden;min-height:clamp(520px,82vh,760px);display:flex;align-items:flex-end;background:#05162b}
+.scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* the light: clear warm centre, dark navy vignette around it */
+.scene::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle 40vmax at 62% 38%,rgba(255,203,5,.16) 0%,rgba(255,170,40,.06) 35%,rgba(5,22,43,.55) 70%,rgba(5,22,43,.85) 100%)}
+.scene::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,var(--navy) 0%,rgba(11,39,73,.75) 26%,rgba(11,39,73,0) 62%),linear-gradient(90deg,rgba(11,39,73,.6),rgba(11,39,73,0) 60%)}
+.scene .wrap{position:relative;z-index:2;padding-bottom:clamp(40px,6vw,72px)}
+.scene .h2{font-size:clamp(2.2rem,6vw,5rem);max-width:12em}
+.scene .lead{max-width:34em}
+.scene .btns{margin-top:28px}
+.story-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:clamp(32px,4vw,52px)}
+.story{position:relative;display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:var(--r-md);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);text-decoration:none;transition:background-color .35s,border-color .35s}
+.story:hover{background:rgba(255,255,255,.09);border-color:rgba(255,203,5,.6)}
+.story small{font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow)}
+.story h3{font-size:1.25rem;text-transform:uppercase;letter-spacing:.01em}
+.story p{font-size:.96rem;line-height:1.55;color:rgba(255,255,255,.76);flex:1}
+.story .play{display:inline-flex;align-items:center;gap:10px;font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-top:6px}
+.story .play i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--yellow);color:var(--navy);transition:box-shadow .35s}
+.story:hover .play i{box-shadow:0 0 0 6px rgba(255,203,5,.2),0 0 24px rgba(255,203,5,.6)}
+.story .play svg{width:14px;height:14px;margin-left:2px}
+.messages{margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);border-radius:var(--r-lg);overflow:hidden;background:linear-gradient(120deg,#0e3a68,#0B2749);border:1px solid rgba(255,255,255,.12)}
+.messages .ph{border-radius:0;min-height:260px}
+.messages div{padding:clamp(26px,4vw,48px);display:flex;flex-direction:column;justify-content:center;gap:12px}
+.messages h3{font-size:clamp(1.8rem,3.4vw,2.8rem);line-height:1;text-transform:uppercase}
+.messages h3 small{display:block;margin-top:8px;font-size:.36em;letter-spacing:.2em;color:var(--yellow)}
+.messages p{color:rgba(255,255,255,.76)}
+
+/* ============================================================
+   TEAM
+   ============================================================ */
+.staff{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(14px,2vw,26px)}
+.member{text-align:center}
+/* team photo ring: turns yellow with a soft glow on hover */
+.member .pic{border-radius:50%;padding:5px;aspect-ratio:1;margin-inline:auto;width:min(100%,210px);background:var(--line);transition:background-color .35s,box-shadow .35s}
+.member .pic img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#dbe6ef}
+.member:hover .pic{background:var(--yellow);box-shadow:0 0 26px rgba(255,203,5,.6)}
+.member h3{margin-top:16px;font-size:1.02rem;color:var(--navy)}
+.member p{margin-top:4px;font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.elders{margin-top:clamp(40px,5vw,64px);padding-top:clamp(28px,4vw,40px);border-top:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:20px 40px;align-items:start}
+.elders h3{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);padding-top:12px}
+.elders ul{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 24px}
+.elder{display:flex;align-items:center;gap:14px}
+.elder img{width:62px;height:62px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--line);transition:box-shadow .35s}
+.elder:hover img{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--yellow),0 0 22px rgba(255,203,5,.6)}
+.elder b{display:block;font-size:.98rem;color:var(--navy)}
+.elder span{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+
+/* ============================================================
+   GIVE & PRAY
+   ============================================================ */
+.give{background:var(--warm)}
+.give-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px}
+.gcard{border-radius:var(--r-lg);padding:clamp(26px,3.6vw,48px);background:#fff;box-shadow:0 20px 60px -40px rgba(120,90,0,.6)}
+.gcard h3{font-size:clamp(1.5rem,2.6vw,2.1rem);text-transform:uppercase;letter-spacing:-.01em;color:var(--navy)}
+.gcard > p{margin-top:10px;color:var(--soft)}
+.ways{margin-top:22px;display:grid;gap:12px}
+.way{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:start;padding:16px 18px;border-radius:14px;background:var(--tint)}
+.way i{grid-row:span 2;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#fff;color:var(--blue)}
+.way i svg{width:20px;height:20px}
+.way b{font-size:.98rem;color:var(--navy);text-transform:uppercase;letter-spacing:.04em}
+.way span{font-size:.94rem;color:var(--soft);line-height:1.5}
+.way a{color:var(--blue);font-weight:700;overflow-wrap:anywhere}
+.gcard.pray{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+.gcard.pray::before{content:"";position:absolute;right:-30%;top:-40%;width:90%;aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,203,5,.25),rgba(255,203,5,0));pointer-events:none}
+.gcard.pray h3{color:#fff}
+.gcard.pray > p{color:rgba(255,255,255,.78)}
+.pray-list{margin-top:22px;display:grid;gap:12px;position:relative}
+.pray-list li{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.88)}
+.pray-list li:last-child{border-bottom:0}
+.pray-list svg{width:22px;height:22px;flex:none;color:var(--yellow);margin-top:1px}
+.pray-list a{color:var(--yellow);font-weight:700;overflow-wrap:anywhere}
+
+/* ============================================================
+   CLOSING BAND — "You belong here"
+   ============================================================ */
+.belong{position:relative;isolation:isolate;overflow:hidden;background:var(--navy);color:#fff;text-align:center;padding-block:clamp(96px,14vw,170px)}
+.belong > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.28;filter:grayscale(1)}
+.belong::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 80% at 50% 0%,rgba(11,39,73,.35),var(--navy) 85%)}
+.belong .rays{z-index:-1;--ox:50%;--oy:-6%}
+.belong .kicker{justify-content:center;letter-spacing:.16em}
+.belong .kicker::before{display:none}
+.belong h2{font-size:clamp(2.8rem,9vw,7.4rem);line-height:.92;font-weight:700;text-transform:uppercase;letter-spacing:-.03em}
+.belong h2 .hl{background-image:linear-gradient(90deg,#FFCB05,#FFE680)}
+.belong p{margin:24px auto 0;max-width:34em;font-size:clamp(1.02rem,1.5vw,1.2rem);color:rgba(255,255,255,.82)}
+.belong .btns{justify-content:center;margin-top:34px}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{background:var(--navy-d);color:rgba(255,255,255,.8);padding-top:clamp(56px,7vw,88px);font-size:.95rem}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr;gap:clamp(28px,4vw,56px)}
+.foot-brand svg{width:96px;height:auto}
+.foot-brand h2{margin-top:18px;font-size:1.05rem;color:#fff;text-transform:uppercase;letter-spacing:.08em}
+.foot-brand address{margin-top:10px;font-style:normal;line-height:1.6}
+.foot-brand a{color:var(--yellow);font-weight:700}
+.footer h3{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow);margin-bottom:14px}
+.footer ul{display:grid;gap:9px}
+.footer ul a{text-decoration:none;transition:color .2s}
+.footer ul a:hover{color:#fff}
+.socials{display:flex;flex-wrap:wrap;gap:8px}
+.socials a{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.18);text-decoration:none;font-size:.8rem;font-weight:700;transition:border-color .25s,background-color .25s,color .25s}
+.socials a:hover{border-color:var(--yellow);color:#fff;background:rgba(255,203,5,.08)}
+.socials svg{width:15px;height:15px}
+.foot-bottom{margin-top:clamp(40px,6vw,64px);padding-block:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:.82rem;color:rgba(255,255,255,.55)}
+.credit{font-size:.7rem;opacity:.6}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:1079px){
+  .sun-card{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sun-intro{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .sun-intro h2{margin-top:0}
+  .sun-item:nth-child(2){border-left:0}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .staff{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:34px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .elders{grid-template-columns:1fr}
+  .elders h3{padding-top:0}
+}
+@media (max-width:899px){
+  .hero-inner{grid-template-columns:1fr;justify-items:center;text-align:center;gap:22px;padding-top:calc(var(--hdr) + 8px)}
+  .hero-copy{display:flex;flex-direction:column;align-items:center}
+  .hero-mark{order:-1;width:clamp(116px,30vw,200px)}
+  .hero-actions,.hero-links{justify-content:center}
+  .hero-foot{flex-direction:column;align-items:center;text-align:center}
+  .hero-foot p{padding-top:16px}
+  .home-grid,.about-grid,.fam-grid,.con-grid{grid-template-columns:1fr}
+  .fam-photos{order:-1}
+  .con-photos{position:relative;top:0;grid-template-columns:1fr 1fr;align-items:end}
+  .con-photos .ph:nth-child(2){width:100%;margin:0 0 -18px;}
+  .walk{grid-template-columns:1fr}
+  .walk img{min-height:0;height:auto;aspect-ratio:1200/509}
+  .vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(180px,34vw)}
+  .tile:first-child{grid-column:span 2;grid-row:span 1}
+  .story-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .messages{grid-template-columns:1fr}
+  .mission ol{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mission li:nth-child(3){border-right:0}
+  .mission li:nth-child(4){padding-left:0}
+  .mission li:nth-child(n+4){border-top:1px solid var(--line)}
+  .give-grid{grid-template-columns:1fr}
+  .elders ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-bg{--ox:50%;--oy:100px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .hero-actions{flex-direction:column;align-items:stretch;width:100%;max-width:340px}
+  .hero-actions .btn{width:100%}
+  .sun-card{grid-template-columns:1fr}
+  .sun-intro{flex-direction:column;align-items:flex-start}
+  .sun-item{border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;column-gap:16px;row-gap:2px;padding:22px 24px}
+  .sun-ico{grid-row:span 3;margin:0}
+  .sun-time{font-size:1.9rem}
+  .steps{grid-template-columns:1fr}
+  .step{display:grid;grid-template-columns:1fr}
+  .vgrid{grid-template-columns:1fr}
+  .vcard-in{min-height:0}
+  .v-ico{margin-bottom:0}
+  .vcard h3{margin-top:18px}
+  .grp{grid-template-columns:1fr auto;padding:18px 4px}
+  .grp-when{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+  .grp .chip{grid-row:2;grid-column:2;align-self:start}
+  .grp-what{grid-column:1}
+  .story-list{grid-template-columns:1fr}
+  .tile:not(:first-child) span i{display:none}
+  .tile span{left:16px;right:16px;bottom:14px;font-size:1rem}
+  .staff{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .member:last-child{grid-column:1/-1}
+  .member:last-child .pic{width:calc(50% - 8px)}
+  .elders ul{grid-template-columns:1fr}
+  .mission ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mission li{padding-left:0 !important;border-right:0 !important;border-top:1px solid var(--line)}
+  .mission li:nth-child(odd){padding-right:12px}
+  .mission li:nth-child(even){padding-left:16px !important;border-left:1px solid var(--line)}
+  .mission li:first-child,.mission li:nth-child(2){border-top:0}
+  .mission li:last-child{grid-column:1/-1}
+  .foot-grid{grid-template-columns:1fr}
+  .first-note{flex-direction:column;align-items:flex-start}
+  .badge-b1{width:78px;height:78px;right:-4px;top:-14px}
+  .badge-b1 b{font-size:1.6rem}
+  .walk .mins b{font-size:2.4rem}
+  .scene{min-height:600px;align-items:flex-end}
+}
+
+/* Reduced motion: everything visible, nothing moving */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Logo recolouring: the blue of the TIC logo becomes white, the yellow beam stays yellow (for navy backgrounds) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="logoLight" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 .28 0 .8  0 0 1.4 0 -.008  0 0 0 1 0"/>
+  </filter>
+</svg>
+
+<header class="site-header" id="header">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Taipei International Church, back to top">
+      <svg viewBox="58 39 942 835" aria-hidden="true"><image href="../new/img/tic-logo.png" width="1077" height="961" filter="url(#logoLight)"/></svg>
+      <span>Taipei<br>International<br>Church</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#home">New home</a>
+      <a href="#about">About</a>
+      <a href="#families">Families</a>
+      <a href="#connect">Connect</a>
+      <a href="#serve">Serve</a>
+      <a href="#stories">Stories</a>
+      <a href="#give">Give</a>
+    </nav>
+    <a class="btn btn-yellow" href="#visit">Plan your visit</a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav"><i></i><span class="sr">Menu</span></button>
+  </div>
+</header>
+
+<div class="mnav" id="mnav" aria-label="Menu">
+  <ul>
+    <li><a class="l" href="#visit"><small>01</small>Plan your visit</a></li>
+    <li><a class="l" href="#home"><small>02</small>New home</a></li>
+    <li><a class="l" href="#about"><small>03</small>About</a></li>
+    <li><a class="l" href="#families"><small>04</small>Families</a></li>
+    <li><a class="l" href="#connect"><small>05</small>Connect</a></li>
+    <li><a class="l" href="#serve"><small>06</small>Serve</a></li>
+    <li><a class="l" href="#stories"><small>07</small>Stories</a></li>
+    <li><a class="l" href="#give"><small>08</small>Give &amp; pray</a></li>
+  </ul>
+  <p>Sundays 10:30 AM in Dazhi · 11:00 AM online</p>
+  <a class="btn btn-yellow" href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener"><span class="live" aria-hidden="true"></span>Watch online</a>
+</div>
+
+<main id="main">
+<!-- =================================================== HERO -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true">
+    <img class="hero-photo" src="../new/img/sunday-worship.jpg" alt="" width="1200" height="799" fetchpriority="high">
+    <div class="rays"></div>
+    <div class="hero-glow"></div>
+  </div>
+
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="kicker" data-in style="--d:.1s">Welcome to</p>
+      <h1 id="hero-title" data-in style="--d:.25s"><span>Taipei</span><span class="k">International</span><span>Church</span></h1>
+      <p class="hero-sub" data-in style="--d:1.1s">Sunday worship service at <b>10:30 AM</b> in Dazhi</p>
+      <div class="hero-actions" data-in style="--d:1.3s">
+        <a class="btn btn-yellow btn-shine" href="#visit">Plan your visit
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost" href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener"><span class="live" aria-hidden="true"></span>Watch online · 11:00 AM</a>
+      </div>
+      <div class="hero-links" data-in style="--d:1.45s">
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Newsletter sign up</a>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=No.+41,+Aly.+7,+Ln.+397,+Mingshui+Rd.,+Zhongshan+Dist.,+Taipei+City+10466" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Map</a>
+      </div>
+    </div>
+
+    <div class="hero-mark" data-in style="--d:0s">
+      <svg viewBox="58 39 942 835" role="img" aria-label="TIC logo, a lighthouse shining its light">
+        <image href="../new/img/tic-logo.png" width="1077" height="961" filter="url(#logoLight)"/>
+      </svg>
+      <span class="lamp" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="wrap hero-foot" data-in style="--d:1.7s">
+    <p>A multicultural, multigenerational, English-speaking church filled with the power of the Holy Spirit. <strong>You belong here.</strong></p>
+    <div class="since">
+      <span>Since <b>1957</b></span>
+      <a class="cue" href="#sundays" aria-label="Scroll to Sundays"><i></i>Scroll</a>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== SUNDAYS -->
+<section class="sundays" id="sundays" aria-labelledby="sun-title">
+  <div class="wrap">
+    <div class="sun-card rv">
+      <div class="sun-intro">
+        <div>
+          <p class="kicker">Sundays</p>
+          <h2 id="sun-title">Join us this Sunday</h2>
+        </div>
+        <p>In person in Dazhi or online, wherever you are.</p>
+      </div>
+      <div class="sun-item">
+        <span class="sun-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 7l-3 3v11h6V10z"/><path d="M4 21h16M8 14H5v7M16 14h3v7"/></svg></span>
+        <p class="sun-time">10:30<small>AM</small></p>
+        <p class="sun-what">Worship in person</p>
+        <p class="sun-where">B1, TIC Worship Center, Dazhi</p>
+      </div>
+      <div class="sun-item">
+        <span class="sun-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg></span>
+        <p class="sun-time">11:00<small>AM</small></p>
+        <p class="sun-what">Online service</p>
+        <p class="sun-where">Live on YouTube</p>
+      </div>
+      <div class="sun-item">
+        <span class="sun-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3 2.3-5.5 5-5.5s5 2.5 5 5.5M13.5 20c.2-2.4 1.6-4.2 3.5-4.2s3.3 1.8 3.5 4.2"/></svg></span>
+        <p class="sun-time">11:20<small>AM</small></p>
+        <p class="sun-what">TIC Kids</p>
+        <p class="sun-where">Pre-K to grade 5</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== NEW HOME -->
+<section class="sec tint" id="home" aria-labelledby="home-title">
+  <div class="wrap home-grid">
+    <div class="home-copy">
+      <p class="kicker rv">TIC new home</p>
+      <h2 class="h2 sh rv" id="home-title">We’ve moved to our <span class="k">new home</span>!</h2>
+      <p class="lead rv">We have officially moved into our new venue: a warm and beautiful space where we can worship and keep growing together in faith and fellowship.</p>
+      <p class="rv">We meet in B1 at the TIC Worship Center, <mark class="hl">a 6-minute walk from Dazhi MRT Station</mark>.</p>
+      <address class="addr rv">
+        <img src="../new/img/tic-pin.png" alt="" width="277" height="434" loading="lazy">
+        <span><b>Address</b>B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei City 10466</span>
+      </address>
+      <div class="btns rv">
+        <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=No.+41,+Aly.+7,+Ln.+397,+Mingshui+Rd.,+Zhongshan+Dist.,+Taipei+City+10466" target="_blank" rel="noopener">Open map</a>
+        <a class="btn btn-line" href="#walk">Sunday walk guide</a>
+      </div>
+    </div>
+    <div class="home-photos">
+      <figure class="ph ph-main rv-img"><img src="../new/img/entrance.jpg" alt="The TIC sign at the entrance of the TIC Worship Center in Dazhi" width="1200" height="791" loading="lazy"></figure>
+      <figure class="ph ph-small rv-img" style="--d:.25s"><img src="../new/img/christmas-worship.jpg" alt="Worship inside the new TIC Worship Center" width="1200" height="799" loading="lazy"></figure>
+      <span class="badge-b1 rv" style="--d:.45s"><span><b>B1</b><small>Worship<br>Center</small></span></span>
+    </div>
+  </div>
+  <div class="wrap">
+    <figure class="walk rv" id="walk">
+      <img src="../new/img/walk-map.jpg" alt="Walking map from Dazhi MRT Station to the TIC Worship Center" width="1200" height="509" loading="lazy">
+      <figcaption>
+        <h3>Sunday walk guide</h3>
+        <p class="mins"><b>6</b> minutes on foot</p>
+        <p>From Dazhi MRT Station to the TIC Worship Center. Look for the blue TIC sign and head down to B1.</p>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- =================================================== FIRST SUNDAY -->
+<section class="sec" id="visit" aria-labelledby="visit-title">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker rv">Plan your visit</p>
+      <h2 class="h2 sh rv" id="visit-title">Your <span class="k">first Sunday</span></h2>
+      <p class="lead rv">Here is what to expect when you join us for the first time.</p>
+    </header>
+    <ol class="steps">
+      <li class="step rv">
+        <figure class="ph"><img src="../new/img/welcome-sign.jpg" alt="People walking past the blue Taipei International Church sign" width="1200" height="800" loading="lazy"></figure>
+        <div class="step-body"><span class="step-num" aria-hidden="true">01</span>
+          <h3>Arrive a little before 10:30</h3><p>Look for the blue TIC sign and head down to B1.</p></div>
+      </li>
+      <li class="step rv" style="--d:.1s">
+        <figure class="ph"><img src="../new/img/worship-singers.jpg" alt="Worship leaders singing on stage" width="1200" height="800" loading="lazy"></figure>
+        <div class="step-body"><span class="step-num" aria-hidden="true">02</span>
+          <h3>Worship together</h3><p>Families stay together for the singing, then children from Pre-K to grade 12 go to their programs.</p></div>
+      </li>
+      <li class="step rv" style="--d:.2s">
+        <figure class="ph"><img src="../new/img/kids-stage.jpg" alt="Children singing on stage at TIC" width="1200" height="800" loading="lazy"></figure>
+        <div class="step-body"><span class="step-num" aria-hidden="true">03</span>
+          <h3>Check in your kids</h3><p>A parent or authorized adult checks each child in and out. Nursery care during the service.</p></div>
+      </li>
+      <li class="step rv" style="--d:.3s">
+        <figure class="ph"><img src="../new/img/fellowship-meal.jpg" alt="Friends smiling together at a church meal" width="1200" height="800" loading="lazy"></figure>
+        <div class="step-body"><span class="step-num" aria-hidden="true">04</span>
+          <h3>Say hello at the welcome table</h3><p>Ask questions, sign up for the newsletter or find a way to serve.</p></div>
+      </li>
+    </ol>
+    <div class="first-note rv">
+      <p><b>Sundays at 10:30 AM</b> · B1, TIC Worship Center, Dazhi · Online at 11:00 AM</p>
+      <a class="btn btn-yellow btn-shine" href="#home">Get directions</a>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== VISION (pinned, lights up word by word) -->
+<section class="vision dark" id="about" aria-labelledby="vision-title">
+  <div class="vision-stick">
+    <img class="vision-bg" src="../new/img/taipei-skyline.jpg" alt="" width="1200" height="801" loading="lazy">
+    <div class="wrap">
+      <p class="kicker rv" id="vision-title">About the church · Our vision</p>
+      <p class="vision-text rv" style="--d:.1s">Disciples who <em>shine the light</em> of God’s love on Taipei, Taiwan and the world.</p>
+      <div class="vision-foot rv" style="--d:.25s">
+        <div class="meter" aria-hidden="true"><i></i></div>
+        <p>Taipei International Church · Since 1957</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== ABOUT + MISSION -->
+<section class="sec" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <p class="kicker rv">Who we are</p>
+        <h2 class="h2 sh rv" id="about-title">About <span class="k">the church</span></h2>
+        <p class="lead rv">Taipei International Church is a non-denominational, English-speaking church, welcoming people from every nation and background since 1957.</p>
+        <p class="about-quote rv">A multicultural, multigenerational church filled with the power of the Holy Spirit, <mark class="hl">proclaiming the good news in word and actions</mark>.</p>
+        <div class="btns rv"><a class="btn btn-blue" href="#">Learn more</a></div>
+      </div>
+      <figure class="ph rv-img"><img src="../new/img/congregation.jpg" alt="The TIC congregation gathered for Sunday worship" width="1200" height="800" loading="lazy"></figure>
+    </div>
+
+    <div class="mission rv">
+      <h3>Our mission · five areas</h3>
+      <ol>
+        <li><small>01</small><b>Worship</b></li>
+        <li><small>02</small><b>Connect</b></li>
+        <li><small>03</small><b>Grow</b></li>
+        <li><small>04</small><b>Serve</b></li>
+        <li><small>05</small><b>Go</b></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== VALUES (spotlight) -->
+<section class="sec on-blue" id="values" aria-labelledby="values-title">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker rv">What we value</p>
+      <h2 class="h2 sh rv" id="values-title">Our <span class="k">values</span></h2>
+    </header>
+    <div class="vgrid">
+      <article class="vcard rv"><div class="vcard-in">
+        <span class="v-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-14c-3-.5-6 0-8 1.5zM12 6v14"/></svg></span>
+        <h3>Bible based</h3><p>Scripture shapes what we believe and how we live.</p></div></article>
+      <article class="vcard rv" style="--d:.08s"><div class="vcard-in">
+        <span class="v-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></span>
+        <h3>Valuing diversity</h3><p>Many nations, cultures and ages, united in Christ.</p></div></article>
+      <article class="vcard rv" style="--d:.16s"><div class="vcard-in">
+        <span class="v-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></span>
+        <h3>Expecting transformation</h3><q>Come as you are, but don’t stay as you came.</q></div></article>
+      <article class="vcard rv"><div class="vcard-in">
+        <span class="v-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3.5 19.5c.4-3.2 2.7-5.4 5.5-5.4s5.1 2.2 5.5 5.4M14.5 14.6c.8-.5 1.6-.7 2.5-.7 2 0 3.6 1.5 4 4"/></svg></span>
+        <h3>Building community</h3><p>Life happens in small groups and serving teams.</p></div></article>
+      <article class="vcard rv" style="--d:.08s"><div class="vcard-in">
+        <span class="v-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg></span>
+        <h3>Practicing servanthood</h3><p>Following Jesus by serving others.</p></div></article>
+      <article class="vcard nums rv" style="--d:.16s"><div class="vcard-in">
+        <div class="num-row"><b>1957</b><span>First service</span></div>
+        <div class="num-row"><b>5</b><span>Mission areas</span></div>
+        <div class="num-row"><b>B1</b><span>Our home in Dazhi</span></div>
+      </div></article>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== FAMILIES -->
+<section class="sec" id="families" aria-labelledby="fam-title">
+  <div class="wrap fam-grid">
+    <div class="fam-photos">
+      <figure class="ph ph-main rv-img"><img src="../new/img/kids-worship.jpg" alt="Children worshipping with a TIC Kids leader" width="1200" height="800" loading="lazy"></figure>
+      <figure class="ph ph-small rv-img" style="--d:.25s"><img src="../new/img/preschool.jpg" alt="Preschool children listening to their teacher" width="1200" height="799" loading="lazy"></figure>
+    </div>
+    <div>
+      <p class="kicker rv">Kids &amp; nursery</p>
+      <h2 class="h2 sh rv" id="fam-title"><span class="k">Families</span></h2>
+      <p class="lead rv">Families stay together for the singing, then children go to programs made just for them.</p>
+      <div class="fam-cards">
+        <div class="fam-card rv"><span class="tag">During<b>10:30</b></span>
+          <h3>Nursery</h3><p>Infants &amp; toddlers, cared for during the 10:30 service.</p></div>
+        <div class="fam-card rv" style="--d:.1s"><span class="tag">11:20<b>12:00</b></span>
+          <h3>TIC Kids · Pre-K – grade 5</h3><p>Worship, Bible teaching and small groups by grade.</p></div>
+      </div>
+      <p class="fam-note rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>A parent or authorized adult checks each child in and out.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== CONNECT / GROUPS -->
+<section class="sec tint" id="connect" aria-labelledby="con-title">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker rv">Connect · Meet new friends</p>
+      <h2 class="h2 sh rv" id="con-title">Church gets personal in <span class="k">smaller groups</span></h2>
+    </header>
+    <div class="con-grid">
+      <div class="con-photos">
+        <figure class="ph rv-img"><img src="../new/img/small-group.jpg" alt="A small group talking together" width="1200" height="800" loading="lazy"></figure>
+        <figure class="ph rv-img" style="--d:.2s"><img src="../new/img/bible-study.jpg" alt="Hands on an open Bible during a Bible study" width="1200" height="795" loading="lazy"></figure>
+      </div>
+      <ul class="groups">
+        <li class="grp rv"><div class="grp-when"><b>Tuesdays</b><span>10:00–11:30 AM</span></div>
+          <div class="grp-what"><h3>Women’s Bible Study</h3><p>TIC Ministry Center, Dazhi</p></div><span class="chip in-person">In person</span></li>
+        <li class="grp rv"><div class="grp-when"><b>2nd &amp; 4th Tue</b><span>Ages 18–35</span></div>
+          <div class="grp-what"><h3>Young Adult Men</h3><p>Online</p></div><span class="chip online">Online</span></li>
+        <li class="grp rv"><div class="grp-when"><b>Wednesdays</b><span>7:30–9:30 PM</span></div>
+          <div class="grp-what"><h3>Young Adults Bible Study</h3><p>Dazhi · college age to mid-30s</p></div><span class="chip in-person">In person</span></li>
+        <li class="grp rv"><div class="grp-when"><b>Wednesdays</b><span>8:00–9:00 PM</span></div>
+          <div class="grp-what"><h3>Community Bible Study</h3><p>On Zoom · Matthew</p></div><span class="chip online">Online</span></li>
+        <li class="grp rv"><div class="grp-when"><b>Wednesdays</b><span>8:30–9:30 PM</span></div>
+          <div class="grp-what"><h3>Men’s Bible Study</h3><p>On Zoom · Luke</p></div><span class="chip online">Online</span></li>
+        <li class="grp rv"><div class="grp-when"><b>Fridays</b><span>12:00–12:30 PM</span></div>
+          <div class="grp-what"><h3>Friday Zoom Prayer</h3><p>On Zoom</p></div><span class="chip online">Online</span></li>
+        <li class="grp rv"><div class="grp-when"><b>Fridays</b><span>7:00–9:00 PM</span></div>
+          <div class="grp-what"><h3>Life Group</h3><p>At a host’s home</p></div><span class="chip in-person">In person</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== SERVE -->
+<section class="sec on-blue" id="serve" aria-labelledby="serve-title">
+  <div class="wrap">
+    <div class="serve-head">
+      <header class="sec-head">
+        <p class="kicker rv">Serve opportunities</p>
+        <h2 class="h2 sh rv" id="serve-title">Find your place to <span class="k">serve</span></h2>
+        <p class="lead rv">Following Jesus by serving others. There is a team where your gifts can shine.</p>
+      </header>
+      <a class="btn btn-white rv" href="#">Join a team</a>
+    </div>
+    <div class="tiles">
+      <a class="tile rv" href="#"><img src="../new/img/worship-band.jpg" alt="" width="1200" height="800" loading="lazy">
+        <span>Worship team <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+      <a class="tile rv" href="#" style="--d:.08s"><img src="../new/img/media-team.jpg" alt="" width="1200" height="800" loading="lazy">
+        <span>Media &amp; technology <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+      <a class="tile rv" href="#" style="--d:.16s"><img src="../new/img/hospitality.jpg" alt="" width="1200" height="799" loading="lazy">
+        <span>Hospitality <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+      <a class="tile rv" href="#" style="--d:.08s"><img src="../new/img/kids-stage.jpg" alt="" width="1200" height="800" loading="lazy" style="object-position:60% 50%">
+        <span>Kids ministry <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+      <a class="tile rv" href="#" style="--d:.16s"><img src="../new/img/filipino-ministry.jpg" alt="" width="1200" height="673" loading="lazy">
+        <span>Filipino ministry <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== STORIES -->
+<section class="stories dark" id="stories" aria-labelledby="stories-title">
+  <div class="scene">
+    <img src="../new/img/praise.jpg" alt="" width="1200" height="798" loading="lazy">
+    <div class="wrap">
+      <p class="kicker rv">Stories.</p>
+      <h2 class="h2 sh rv" id="stories-title">My life <span class="k">changed</span> at TIC</h2>
+      <p class="lead rv">Real people, real stories of what God is doing in our church family.</p>
+      <div class="btns rv"><a class="btn btn-yellow btn-shine" href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener">Listen now</a></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="story-list">
+      <a class="story rv" href="#"><small>Story</small><h3>Surrendered</h3>
+        <p>Iquo Phillip shares about the loss of her son and how TIC became her family’s home in Taiwan.</p>
+        <span class="play"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Listen now</span></a>
+      <a class="story rv" href="#" style="--d:.08s"><small>Retreat</small><h3>Make Room</h3>
+        <p>Our 2025 InterGen &amp; Young Adults retreat at Ting Tao Camp in Yilan.</p>
+        <span class="play"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Listen now</span></a>
+      <a class="story rv" href="#" style="--d:.16s"><small>Missions</small><h3>Sent to the nations</h3>
+        <p>Mission trips to Madagascar and the Philippines.</p>
+        <span class="play"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Listen now</span></a>
+      <a class="story rv" href="#"><small>Healing</small><h3>Dion</h3>
+        <p>Healed after eight years of pain from a sports injury.</p>
+        <span class="play"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Listen now</span></a>
+      <a class="story rv" href="#" style="--d:.08s"><small>Faith</small><h3>Mae</h3>
+        <p>Learned to depend completely on God through paralysis.</p>
+        <span class="play"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Listen now</span></a>
+      <a class="story rv" href="#" style="--d:.16s"><small>Baptism</small><h3>Vivian</h3>
+        <p>Baptized in 2019 during cancer treatment.</p>
+        <span class="play"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Listen now</span></a>
+    </div>
+
+    <div class="messages rv">
+      <figure class="ph"><img src="../new/img/preaching.jpg" alt="Pastor preaching on a Sunday at TIC" width="1200" height="600" loading="lazy"></figure>
+      <div>
+        <h3>Messages.<small>Every Sunday</small></h3>
+        <p>Missed a Sunday? Watch the latest sermons online, live at 11:00 AM or anytime after.</p>
+        <div class="btns"><a class="btn btn-ghost" href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener"><span class="live" aria-hidden="true"></span>Watch now</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== TEAM -->
+<section class="sec" id="team" aria-labelledby="team-title">
+  <div class="wrap">
+    <header class="sec-head center">
+      <p class="kicker rv">Our leaders</p>
+      <h2 class="h2 sh rv" id="team-title">Meet the <span class="k">team</span></h2>
+      <p class="lead rv">Our pastoral staff, administrative staff and elders are a warm group of people who love God, love people and love life!</p>
+    </header>
+    <ul class="staff">
+      <li class="member rv"><div class="pic"><img src="../new/img/team-brad.jpg" alt="Brad Warne" width="360" height="360" loading="lazy"></div><h3>Brad Warne</h3><p>Pastor</p></li>
+      <li class="member rv" style="--d:.06s"><div class="pic"><img src="../new/img/team-jennifer.jpg" alt="Jennifer Cheng" width="360" height="360" loading="lazy"></div><h3>Jennifer Cheng</h3><p>Executive Assistant</p></li>
+      <li class="member rv" style="--d:.12s"><div class="pic"><img src="../new/img/team-joe.jpg" alt="Joe C. Phanoella" width="360" height="360" loading="lazy"></div><h3>Joe C. Phanoella</h3><p>Director of Media &amp; Technology</p></li>
+      <li class="member rv" style="--d:.18s"><div class="pic"><img src="../new/img/team-dior.jpg" alt="Diorella Yu de Leon" width="360" height="360" loading="lazy"></div><h3>Diorella Yu de Leon</h3><p>Account Manager</p></li>
+      <li class="member rv" style="--d:.24s"><div class="pic"><img src="../new/img/team-vivian.jpg" alt="Vivian Hu" width="360" height="360" loading="lazy"></div><h3>Vivian Hu</h3><p>Finance</p></li>
+    </ul>
+    <div class="elders rv">
+      <h3>Elders &amp; treasurer</h3>
+      <ul>
+        <li class="elder"><img src="../new/img/team-eric.jpg" alt="" width="360" height="360" loading="lazy"><div><b>Eric Lin</b><span>Chair of Elders</span></div></li>
+        <li class="elder"><img src="../new/img/team-annmarie.jpg" alt="" width="360" height="360" loading="lazy"><div><b>Ann-Marie Padgett</b><span>Elder</span></div></li>
+        <li class="elder"><img src="../new/img/team-alita.jpg" alt="" width="360" height="360" loading="lazy"><div><b>Alita Wang</b><span>Elder</span></div></li>
+        <li class="elder"><img src="../new/img/team-daniel.jpg" alt="" width="360" height="360" loading="lazy"><div><b>Daniel Teng</b><span>Elder</span></div></li>
+        <li class="elder"><img src="../new/img/team-jun.jpg" alt="" width="360" height="360" loading="lazy"><div><b>Jun Baldoz</b><span>Elder</span></div></li>
+        <li class="elder"><img src="../new/img/team-henry.jpg" alt="" width="360" height="360" loading="lazy"><div><b>Henry Liu</b><span>Treasurer</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== GIVE & PRAY -->
+<section class="sec give" id="give" aria-labelledby="give-title">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="kicker rv">Generosity &amp; prayer</p>
+      <h2 class="h2 sh rv" id="give-title">Give &amp; <span class="k">pray</span></h2>
+    </header>
+    <div class="give-grid">
+      <div class="gcard rv">
+        <h3>Ways to give</h3>
+        <p>Thank you for supporting the ministry of Taipei International Church.</p>
+        <ul class="ways">
+          <li class="way"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/></svg></i>
+            <b>Credit card</b><span>Give through our online giving page.</span></li>
+          <li class="way"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 4l9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></i>
+            <b>Bank transfer (TWD)</b><span>Transfer in New Taiwan dollars from a local account.</span></li>
+          <li class="way"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></i>
+            <b>Overseas wire</b><span>Email the last four digits of your account and the amount to <a href="mailto:giving@taipeichurch.org">giving@taipeichurch.org</a>.</span></li>
+        </ul>
+        <div class="btns"><a class="btn btn-yellow btn-shine" href="#">Give online</a></div>
+      </div>
+      <div class="gcard pray rv" style="--d:.1s">
+        <h3>Prayer request</h3>
+        <p>We would love to pray with you. Reach out any time.</p>
+        <ul class="pray-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <span>Write to <a href="mailto:info@taipeichurch.org">info@taipeichurch.org</a></span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="m15.5 10.5 6-3.5v10l-6-3.5"/></svg>
+            <span>Join the Friday Zoom prayer, 12:00–12:30 PM</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.7-5A8.5 8.5 0 1 1 21 12z"/></svg>
+            <span>Join the daily LINE prayer group</span></li>
+        </ul>
+        <div class="btns"><a class="btn btn-ghost" href="mailto:info@taipeichurch.org">Send a prayer request</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== CLOSING BAND -->
+<section class="belong" aria-labelledby="belong-title">
+  <img src="../new/img/church-family.jpg" alt="" width="1200" height="753" loading="lazy">
+  <div class="rays" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="kicker rv">Taipei International Church</p>
+    <h2 id="belong-title" class="rv">You belong <mark class="hl under">here.</mark></h2>
+    <p class="rv">Sunday worship service at 10:30 AM in Dazhi, and online at 11:00 AM. Come as you are.</p>
+    <div class="btns rv">
+      <a class="btn btn-yellow btn-shine" href="#visit">Plan your visit</a>
+      <a class="btn btn-ghost" href="#">Newsletter sign up</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- =================================================== FOOTER -->
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <svg viewBox="58 39 942 835" aria-hidden="true"><image href="../new/img/tic-logo.png" width="1077" height="961" filter="url(#logoLight)"/></svg>
+      <h2>Taipei International Church</h2>
+      <address>B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei City 10466<br>
+        <a href="mailto:info@taipeichurch.org">info@taipeichurch.org</a></address>
+    </div>
+    <div>
+      <h3>Sundays</h3>
+      <ul>
+        <li>10:30 AM · in person in Dazhi</li>
+        <li>11:00 AM · online on YouTube</li>
+        <li>11:20 AM · TIC Kids</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Quick links</h3>
+      <ul>
+        <li><a href="#visit">Plan your visit</a></li>
+        <li><a href="#give">Giving</a></li>
+        <li><a href="#connect">Groups</a></li>
+        <li><a href="mailto:info@taipeichurch.org">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Follow us</h3>
+      <div class="socials">
+        <a href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4a2.6 2.6 0 0 0-1.8 1.8C2 8.8 2 12 2 12s0 3.2.4 4.8a2.6 2.6 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.6 2.6 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3z"/></svg>YouTube</a>
+        <a href="https://www.facebook.com/Taipei.Intl.Church/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.2-1.3 1.4-1.3H17V2.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v1.9H8v3.1h2.6V21H14v-9.4h2.6l.4-3.1z"/></svg>Facebook</a>
+        <a href="https://www.instagram.com/tic_taipeichurch/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a>
+        <a href="https://twitter.com/TIConlinechurch" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.2-8.3L2 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg>X</a>
+        <a href="https://open.spotify.com/show/6KYo14ZcT2LvSujbNx273A" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.6.6 0 0 1-.9.2c-2.4-1.5-5.4-1.8-9-1a.6.6 0 1 1-.3-1.2c3.9-.9 7.2-.5 9.9 1.1.3.2.4.6.3.9zm1.2-2.7a.8.8 0 0 1-1.1.3c-2.7-1.7-6.9-2.2-10.2-1.2a.8.8 0 1 1-.4-1.5c3.7-1.1 8.4-.6 11.5 1.3.4.2.5.7.2 1.1zm.1-2.8C14.7 9 9.4 8.8 6.3 9.7a.9.9 0 1 1-.5-1.8c3.5-1.1 9.4-.9 13.1 1.3a.9.9 0 0 1-1 1.7z"/></svg>Spotify</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© Taipei International Church · Since 1957</span>
+    <span class="credit">Design proposal by Páginas Clover</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const html = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+
+  /* ---------- Hero entrance (once, on load) ---------- */
+  requestAnimationFrame(() => document.body.classList.add('ready'));
+  setTimeout(() => document.body.classList.add('ready'), 120);   // in case rAF is throttled
+
+  /* ---------- Header: solid after scrolling + active menu link ---------- */
+  const header = $('#header');
+  const links = $$('.nav a');
+  const targets = links.map(a => document.querySelector(a.getAttribute('href')));
+  let ticking = false;
+  const onScroll = () => {
+    ticking = false;
+    header.classList.toggle('solid', scrollY > 60);
+    const line = innerHeight * .35; let cur = -1;
+    targets.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= line) cur = i; });
+    links.forEach((a, i) => { a.classList.toggle('current', i === cur); i === cur ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---------- Mobile menu ---------- */
+  const menuBtn = $('#menuBtn'), mnav = $('#mnav');
+  const setMenu = open => {
+    html.classList.toggle('menu-open', open);
+    menuBtn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  menuBtn.addEventListener('click', () => setMenu(!html.classList.contains('menu-open')));
+  mnav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && html.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
+
+  /* ---------- One-time entrance animations when elements scroll into view ---------- */
+  const items = $$('.rv, .rv-img');
+  if (reduce || !('IntersectionObserver' in window)) items.forEach(el => el.classList.add('in'));
+  else {
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+    }), { threshold: .18, rootMargin: '0px 0px -8% 0px' });
+    items.forEach(el => io.observe(el));
+  }
+})();
+</script>
+</body>
+</html>
