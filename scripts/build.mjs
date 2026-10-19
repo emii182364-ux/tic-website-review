@@ -28,6 +28,7 @@ fs.mkdirSync(path.join(OUT, 'downloads'), { recursive: true });
 fs.cpSync(path.join(CONTENT, 'images'), path.join(OUT, 'images'), { recursive: true });
 if (fs.existsSync(path.join(ROOT, 'preview'))) fs.cpSync(path.join(ROOT, 'preview'), path.join(OUT, 'preview'), { recursive: true });
 if (fs.existsSync(path.join(ROOT, 'new'))) fs.cpSync(path.join(ROOT, 'new'), path.join(OUT, 'new'), { recursive: true });
+if (fs.existsSync(path.join(ROOT, 'proposals'))) fs.cpSync(path.join(ROOT, 'proposals'), path.join(OUT, 'proposals'), { recursive: true });
 
 // ---------- Word ----------
 const border = { style: BorderStyle.SINGLE, size: 4, color: 'D5DFE8' };
@@ -124,7 +125,7 @@ function codeBlock(text) {
 // ---------- HTML ----------
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function page({ title, body, current }) {
-  const nav = docs.map(d => `<a href="${d.slug}.html"${d.slug === current ? ' aria-current="page"' : ''}>${esc(d.title)}</a>`).join('') + '<a href="preview/index.html">Corrected preview</a><a href="new/index.html">New site proposal</a>';
+  const nav = docs.map(d => `<a href="${d.slug}.html"${d.slug === current ? ' aria-current="page"' : ''}>${esc(d.title)}</a>`).join('') + '<a href="preview/index.html">Corrected preview</a><a href="new/index.html">New site proposal</a><a href="proposals/galeria.html">5 homepage designs</a>';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -167,6 +168,16 @@ fs.writeFileSync(path.join(OUT, 'index.html'), page({
 <h2>Proposal: a new mobile-first website</h2>
 <p>A new website built outside Wix with all the content, photos and corrections. It is designed for phones first, opens in English and has a 中文 (Traditional Chinese) button. It is a proposal for the church to compare; the official website has not been changed.</p>
 <p><a class="btn" href="new/index.html">Open the new website proposal</a></p>
+<h2>Five homepage design proposals</h2>
+<p>Five visual samples for the homepage, all very close to today's taipeichurch.org (same content, order and colours) and all possible to build in Wix. They differ in layout and effects. Design only: no SEO or form changes.</p>
+<ol>
+<li><a href="proposals/01-faithful-refresh.html"><b>Faithful refresh</b></a>: closest to today's site, with smoother animations.</li>
+<li><a href="proposals/02-photo-welcome.html"><b>Photo welcome</b></a>: full-screen slideshow of worship photos and parallax photo strips.</li>
+<li><a href="proposals/03-bright-clean.html"><b>Bright &amp; clean</b></a>: white and light blue, cards and a "Your first Sunday" timeline.</li>
+<li><a href="proposals/04-church-family.html"><b>Church family</b></a>: people first, with photo slider, stories and team cards.</li>
+<li><a href="proposals/05-shine-the-light.html"><b>Shine the light</b></a>: deep navy hero with soft light rays, from TIC's vision.</li>
+</ol>
+<p><a class="btn" href="proposals/galeria.html">Compare all 5 designs</a></p>
 <h2>Preview of the corrected website</h2>
 <p>A copy of taipeichurch.org with the fixes from Fix Reports #1 and #2 already applied (text, links, page titles, Google descriptions and image descriptions). The layout is unchanged. It is a preview only: the official website has not been changed.</p>
 <p><a class="btn" href="preview/index.html">Open the corrected preview</a> <a class="small" href="preview/CHANGES.txt">List of changes</a></p>
