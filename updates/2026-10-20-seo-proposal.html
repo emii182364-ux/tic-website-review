@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>TIC SEO Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: same bulletin-style reading column as the TIC status report; Google-result mockups show before/after */
+:root{
+  --bg:#f7f9fb; --paper:#ffffff; --ink:#14222f; --muted:#556676; --line:#dbe3ea;
+  --blue:#046eb8; --navy:#0b2749; --yellow:#ffcb05; --yellow-soft:#fff6cc;
+  --g-title:#1a0dab; --g-url:#3c6e3a; --g-text:#4d5156;
+  --old:#b4441b; --old-bg:#fbe9e2; --new:#1d7a46; --new-bg:#e3f4ea;
+  --f-display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1520; --paper:#121e2b; --ink:#e6edf3; --muted:#9db0c1; --line:#243445;
+  --blue:#5cb3f0; --navy:#cfe6fa; --yellow:#ffd84d; --yellow-soft:#3a3214;
+  --g-title:#99c3ff; --g-url:#8fd18b; --g-text:#c3ccd5;
+  --old:#ff9b76; --old-bg:#3a2016; --new:#6fd39b; --new-bg:#16301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1520; --paper:#121e2b; --ink:#e6edf3; --muted:#9db0c1; --line:#243445;
+  --blue:#5cb3f0; --navy:#cfe6fa; --yellow:#ffd84d; --yellow-soft:#3a3214;
+  --g-title:#99c3ff; --g-url:#8fd18b; --g-text:#c3ccd5;
+  --old:#ff9b76; --old-bg:#3a2016; --new:#6fd39b; --new-bg:#16301f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:40px 64px;display:flex;flex-direction:column;gap:40px}
+header.top{display:flex;flex-direction:column;gap:10px;border-bottom:4px solid var(--blue);padding-bottom:24px}
+.eyebrow{font-family:var(--f-display);font-weight:700;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,6vw,3rem);line-height:1.05;margin:0;color:var(--navy);text-transform:uppercase;text-wrap:balance}
+.meta{color:var(--muted);font-size:.95rem;margin:0}
+h2{font-family:var(--f-display);font-weight:800;font-size:1.5rem;line-height:1.2;margin:0;color:var(--navy);text-transform:uppercase;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:700;font-size:1.05rem;margin:0}
+p{margin:0;max-width:68ch}
+section{display:flex;flex-direction:column;gap:16px}
+.lead{font-size:1.08rem}
+.callout{background:var(--yellow-soft);border-left:6px solid var(--yellow);padding:18px 20px;border-radius:4px;display:flex;flex-direction:column;gap:8px}
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.serp{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tag{align-self:flex-start;font-family:var(--f-display);font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-bottom:6px}
+.tag.old{background:var(--old-bg);color:var(--old)}
+.tag.new{background:var(--new-bg);color:var(--new)}
+.serp .u{color:var(--g-url);font-size:.85rem;overflow-wrap:anywhere}
+.serp .t{color:var(--g-title);font-size:1.15rem;line-height:1.3;font-family:Arial, sans-serif}
+.serp .d{color:var(--g-text);font-size:.9rem;font-family:Arial, sans-serif}
+.serp .d.empty{font-style:italic}
+ol.plan{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:12px}
+ol.plan li{max-width:70ch}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:700px;font-size:.92rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-display);font-weight:700;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.page{font-weight:600;white-space:nowrap}
+td.title{color:var(--g-title);font-family:Arial, sans-serif}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem}
+.note{color:var(--muted);font-size:.9rem}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.problems{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.prob{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.prob.urgent{border-color:var(--old);grid-column:1 / -1}
+.prob .tag{margin-bottom:0}
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:6px}
+</style>
+<style>body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Taipei International Church · taipeichurch.org</div>
+    <h1>Google search proposal</h1>
+    <p class="meta">20 October 2026 · Prepared by the Páginas Clover team for the TIC website team</p>
+  </header>
+
+  <section aria-labelledby="sum">
+    <h2 id="sum">In short</h2>
+    <div class="callout">
+      <p><strong>Goal:</strong> help people who search for an English-speaking church in Taipei find TIC, and make TIC's results on Google clear and inviting.</p>
+      <p><strong>Most urgent:</strong> Google is still sending visitors to the old "New pastor" page, which now shows "Page not found". We will send them to Meet the Team instead.</p>
+      <p><strong>What changes:</strong> only how the website appears on Google (titles, short descriptions, church details and old addresses). Visitors will not see any difference on the pages themselves.</p>
+      <p><strong>What we ask:</strong> your OK to apply it this week. Nothing is deleted, and everything can be changed back.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="problems">
+    <h2 id="problems">Problems we see in the search data</h2>
+    <p class="note">Search numbers: Wix dashboard, Google results, 19 September – 16 October 2026 (28 days). Page checks: live site, 19–20 October 2026.</p>
+    <div class="problems">
+      <div class="prob urgent">
+        <span class="tag old">Urgent</span>
+        <h3>Google sends people to a page that no longer exists</h3>
+        <p>The old "New pastor" page (/newpastor) now shows "Page not found", but Google still lists it: it appeared 50 times and <strong>12 people clicked and landed on an error page</strong>. The same can happen with older addresses that were removed (old testimonies, /visit, /oldserve, /blog).</p>
+      </div>
+      <div class="prob">
+        <h3>People only find TIC when they already know its name</h3>
+        <p>"taipei international church" was shown 229 times (position 1.8). The general search "international church taipei" was shown only 20 times, at position 7.9, near the bottom of the first page. Other English searches people use to look for a church, like "English church Taipei", don't appear in the dashboard at all.</p>
+      </div>
+      <div class="prob">
+        <h3>Many people see TIC on Google but don't click</h3>
+        <p>The homepage was shown 2,640 times and clicked 171 times (6%). The Groups page was shown 617 times and clicked 9 times (1.5%). Their titles ("Home | taipeichurch", "Groups | taipeichurch") and missing descriptions don't tell people what they will find.</p>
+      </div>
+      <div class="prob">
+        <h3>Google receives three different addresses</h3>
+        <p>The pages show No. 41, Aly. 7, Ln. 397, Mingshui Rd. The hidden information Google reads still says "575 Mingshui Road, 10491", and the homepage map button goes to "569 Mingshui Rd, B2". Conflicting addresses make Google and maps less confident about where the church is.</p>
+      </div>
+      <div class="prob">
+        <h3>Google sees TIC as a generic business called "taipeichurch"</h3>
+        <p>The hidden data describes a "LocalBusiness" named "taipeichurch" instead of a church named "Taipei International Church".</p>
+      </div>
+      <div class="prob">
+        <h3>Old, sample and duplicate pages are listed for Google</h3>
+        <p>Two Wix sample events with a San Francisco address, a calendar that was never connected, an empty Livestream page, a 2019 discussion guide, six event pages all titled "Registration Form", a page called "Copy of Serve", and 12 addresses that start with "copy-of".</p>
+      </div>
+      <div class="prob">
+        <h3>Pages and photos are hard for Google to understand</h3>
+        <p>40 of 41 pages have no description, only 6 of 35 pages have a main heading, and 169 of 398 photos have no description or only a file name like "IMG_0962.JPG", so they can't show up in Google Images.</p>
+      </div>
+      <div class="prob">
+        <h3>No Chinese at all</h3>
+        <p>There is no Chinese version and no Chinese address on the homepage, so people who search in Chinese (for example 台北 英文 教會, "English church Taipei") have nothing to find.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ba">
+    <h2 id="ba">Before and after on Google</h2>
+    <p>This is how the Groups page looks in Google results today, and how it would look with the new title and description.</p>
+    <div class="compare">
+      <div class="serp">
+        <span class="tag old">Today</span>
+        <span class="u">www.taipeichurch.org › groups</span>
+        <span class="t">Groups | taipeichurch</span>
+        <span class="d empty">No description: Google picks a random piece of text from the page.</span>
+      </div>
+      <div class="serp">
+        <span class="tag new">Proposed</span>
+        <span class="u">www.taipeichurch.org › groups</span>
+        <span class="t">Small Groups &amp; Bible Studies | Taipei International Church</span>
+        <span class="d">Join a Bible study or small group in English: men's, women's, young adults (18-35), Life Group, Worship Circle and Friday prayer, in Taipei or on Zoom.</span>
+      </div>
+    </div>
+    <p class="note">In the last 28 days (19 September – 16 October, Wix dashboard), the Groups page appeared in Google 617 times but was clicked only 9 times.</p>
+  </section>
+
+  <section aria-labelledby="plan">
+    <h2 id="plan">What we will do</h2>
+    <ol class="plan">
+      <li><strong>Site name.</strong> Change it from "taipeichurch" to "Taipei International Church". Every page title will end with the church's real name.</li>
+      <li><strong>Titles and descriptions</strong> for the 17 main pages (table below). Written from the real content of each page, using the words people search for, and short enough that Google shows them in full.</li>
+      <li><strong>Church details for Google.</strong> Name, the new address (B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei City 10466), email and Sunday 10:30 AM service, so Google stops showing the old address (575 Mingshui Road).</li>
+      <li><strong>Hide old or empty pages from Google</strong> (they stay on the site and can be shown again anytime):
+        <div class="chips" style="margin-top:8px">
+          <span class="chip">Calendar</span><span class="chip">Events (Wix sample events)</span><span class="chip">Livestream</span><span class="chip">Discussion Guide (2019)</span><span class="chip">Easter</span><span class="chip">Copy of Serve</span><span class="chip">Availability to Serve</span><span class="chip">Blue Lanyard Registration</span><span class="chip">Bank Transfer</span>
+        </div>
+      </li>
+      <li><strong>Send old addresses to the right page</strong> (Wix "URL redirects"), so nobody coming from Google lands on "Page not found":
+        <div class="tablewrap" style="margin-top:8px">
+          <table style="min-width:420px">
+            <thead><tr><th>Old address</th><th>Goes to</th></tr></thead>
+            <tbody>
+              <tr><td>/newpastor</td><td>/meettheteam (Meet the Team)</td></tr>
+              <tr><td>/testimony-… (5 old testimony pages)</td><td>/stories</td></tr>
+              <tr><td>/visit and /plan-your-visit</td><td>Homepage (until a "Plan your visit" page exists)</td></tr>
+              <tr><td>/oldserve</td><td>/serve</td></tr>
+              <tr><td>/blog</td><td>/whatshappening</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="table">
+    <h2 id="table">New titles and descriptions</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Page</th><th>New title</th><th>New description</th></tr></thead>
+        <tbody>
+          <tr><td class="page">Home</td><td class="title">Taipei International Church | English Church in Taipei</td><td>English-speaking, non-denominational church in Taipei since 1957. Join us Sundays at 10:30 AM in Dazhi, near Dazhi MRT, or online. Kids and youth programs.</td></tr>
+          <tr><td class="page">About Us</td><td class="title">About Us | Taipei International Church</td><td>A non-denominational, English-speaking church in Taipei founded in 1957, with people from all over the world. Learn who we are and what we believe.</td></tr>
+          <tr><td class="page">Beliefs</td><td class="title">Our Beliefs | Taipei International Church</td><td>TIC accepts the Apostles' Creed as its statement of faith. Read what we believe about God, Jesus Christ, the Holy Spirit and the authority of Scripture.</td></tr>
+          <tr><td class="page">Vision</td><td class="title">Vision, Mission &amp; Values | Taipei International Church</td><td>We see a church shining the light of Christ in Taipei, across Taiwan and to the ends of the earth. Read the vision, mission and values of TIC.</td></tr>
+          <tr><td class="page">History</td><td class="title">Our History Since 1957 | Taipei International Church</td><td>How a small English-speaking congregation began in Taipei in October 1957 and grew into Taipei International Church. Read our short history.</td></tr>
+          <tr><td class="page">Constitution</td><td class="title">Constitution | Taipei International Church</td><td>Read the constitution of Taipei International Church, the plan by which our international church in Taipei is organized and governed.</td></tr>
+          <tr><td class="page">Meet the Team</td><td class="title">Our Pastor &amp; Team | Taipei International Church</td><td>Meet Pastor Brad Warne, the TIC staff and our elders: the people who serve and lead Taipei International Church.</td></tr>
+          <tr><td class="page">Families</td><td class="title">Kids &amp; Families | Taipei International Church</td><td>Nursery for infants and toddlers, TIC Kids for Pre-K to 5th grade and a Youth Service for teens, every Sunday during our 10:30 AM service in Taipei.</td></tr>
+          <tr><td class="page">Groups</td><td class="title">Small Groups &amp; Bible Studies | Taipei International Church</td><td>Join a Bible study or small group in English: men's, women's, young adults (18-35), Life Group, Worship Circle and Friday prayer, in Taipei or on Zoom.</td></tr>
+          <tr><td class="page">Connect</td><td class="title">Connect &amp; Meet People | Taipei International Church</td><td>New to Taiwan or living here for years? Find a small group or a serving team and become part of our international church family in Taipei.</td></tr>
+          <tr><td class="page">Serve</td><td class="title">Serve at Church | Taipei International Church</td><td>Use your gifts on the worship, welcome, tech, media, kids, hospitality or youth team. Find out how to start serving at Taipei International Church.</td></tr>
+          <tr><td class="page">Stories</td><td class="title">Stories of Faith | Taipei International Church</td><td>Real stories from our church family in Taipei: testimonies, retreats and mission trips to Madagascar and the Philippines.</td></tr>
+          <tr><td class="page">Giving</td><td class="title">Ways to Give | Taipei International Church</td><td>Support Taipei International Church by credit card, bank transfer in Taiwan (TWD) or overseas wire transfer. Questions: giving@taipeichurch.org.</td></tr>
+          <tr><td class="page">Contact</td><td class="title">Contact Us | Taipei International Church</td><td>Questions about Sunday services, kids or groups? Send us a message or email info@taipeichurch.org. B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Taipei.</td></tr>
+          <tr><td class="page">What's Happening</td><td class="title">This Week at Church | Taipei International Church</td><td>Sunday sermons, events and announcements at Taipei International Church. Join us Sundays at 10:30 AM in Dazhi, Taipei.</td></tr>
+          <tr><td class="page">Praise and Prayer</td><td class="title">Prayer Requests | Taipei International Church</td><td>Send a prayer request or share a praise report with the TIC church family. We would love to pray with you.</td></tr>
+          <tr><td class="page">Worship Team</td><td class="title">Worship Team | Taipei International Church</td><td>Join the TIC worship team and help lead the congregation in worship during our Sunday service in Taipei.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">The other Serve team pages currently show the wrong team (each address shows the next team in the list). We will fix their content first and then give them titles.</p>
+  </section>
+
+  <section aria-labelledby="measure">
+    <h2 id="measure">How we will measure it</h2>
+    <p>Google usually takes a few days to a few weeks to show new titles. Four weeks after the change, we will compare these numbers from the Wix dashboard:</p>
+    <div class="tablewrap">
+      <table style="min-width:480px">
+        <thead><tr><th>Starting point (19 Sep – 16 Oct)</th><th class="num">Shown</th><th class="num">Clicks</th></tr></thead>
+        <tbody>
+          <tr><td>Homepage</td><td class="num">2,640</td><td class="num">171</td></tr>
+          <tr><td>Groups page</td><td class="num">617</td><td class="num">9</td></tr>
+          <tr><td>Search "international church taipei"</td><td class="num">20</td><td class="num">5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">We can't promise a position on Google, since nobody can. What we can promise is clear, accurate information and an honest comparison of the numbers.</p>
+  </section>
+
+  <section aria-labelledby="next">
+    <h2 id="next">After this step</h2>
+    <ul>
+      <li>One main heading per page and descriptions for the photos (169 images today have none or only a file name).</li>
+      <li>A "Plan your visit" page for first-time guests, with the walk video from Dazhi MRT.</li>
+      <li>Keeping the Google Business Profile up to date with the same address, hours and photos.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>All descriptions use information already published on taipeichurch.org (checked on 19 October 2026). Search numbers come from the Wix dashboard.</p>
+    <p>The Páginas Clover team</p>
+  </footer>
+</div>
+
+</body>
+</html>

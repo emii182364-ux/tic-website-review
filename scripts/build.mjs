@@ -29,6 +29,7 @@ fs.cpSync(path.join(CONTENT, 'images'), path.join(OUT, 'images'), { recursive: t
 if (fs.existsSync(path.join(ROOT, 'preview'))) fs.cpSync(path.join(ROOT, 'preview'), path.join(OUT, 'preview'), { recursive: true });
 if (fs.existsSync(path.join(ROOT, 'new'))) fs.cpSync(path.join(ROOT, 'new'), path.join(OUT, 'new'), { recursive: true });
 if (fs.existsSync(path.join(ROOT, 'proposals'))) fs.cpSync(path.join(ROOT, 'proposals'), path.join(OUT, 'proposals'), { recursive: true });
+if (fs.existsSync(path.join(ROOT, 'updates'))) fs.cpSync(path.join(ROOT, 'updates'), path.join(OUT, 'updates'), { recursive: true });
 
 // ---------- Word ----------
 const border = { style: BorderStyle.SINGLE, size: 4, color: 'D5DFE8' };
@@ -125,7 +126,7 @@ function codeBlock(text) {
 // ---------- HTML ----------
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function page({ title, body, current }) {
-  const nav = docs.map(d => `<a href="${d.slug}.html"${d.slug === current ? ' aria-current="page"' : ''}>${esc(d.title)}</a>`).join('') + '<a href="preview/index.html">Corrected preview</a><a href="new/index.html">New site proposal</a><a href="proposals/galeria.html">5 homepage designs</a>';
+  const nav = docs.map(d => `<a href="${d.slug}.html"${d.slug === current ? ' aria-current="page"' : ''}>${esc(d.title)}</a>`).join('') + '<a href="updates/2026-10-19-status-report.html">October status report</a><a href="updates/2026-10-20-seo-proposal.html">Google search proposal</a><a href="preview/index.html">Corrected preview</a><a href="new/index.html">New site proposal</a><a href="proposals/galeria.html">5 homepage designs</a>';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -164,6 +165,13 @@ fs.writeFileSync(path.join(OUT, 'index.html'), page({
   title: 'Overview', current: '',
   body: `<article><p class="eyebrow">Taipei International Church</p><h1>taipeichurch.org website review</h1>
 <p>A review of taipeichurch.org with step-by-step fixes. Nothing here changes the live website: every fix is made by hand in the Wix Editor.</p>
+<h2>October 2026 updates</h2>
+<p>New reports from the Páginas Clover team after checking the live site again on 19–20 October 2026.</p>
+<ul>
+<li><a href="updates/2026-10-19-status-report.html"><b>Website status report</b></a>: Google numbers, what we will fix, what we would like to improve, and questions for the TIC team.</li>
+<li><a href="updates/2026-10-20-seo-proposal.html"><b>Google search proposal</b></a>: problems in the search data, new page titles and descriptions, and redirects for old addresses.</li>
+</ul>
+<h2>September 2026 review</h2>
 <ol class="cards">${cards}</ol>
 <h2>Proposal: a new mobile-first website</h2>
 <p>A new website built outside Wix with all the content, photos and corrections. It is designed for phones first, opens in English and has a 中文 (Traditional Chinese) button. It is a proposal for the church to compare; the official website has not been changed.</p>
