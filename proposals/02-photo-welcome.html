@@ -1,0 +1,970 @@
+<!doctype html>
+<!--
+  Taipei International Church — Proposal 02 · "Photo welcome"
+  Visual sample by Páginas Clover (design + effects only; no SEO, no security work, no real forms).
+
+  Can be used in Wix: every effect maps to a native Wix Editor / Wix Studio feature (no custom code).
+   1. Full-screen hero slideshow, cross-fade + slow Ken Burns zoom, marks, pause → Slideshow / slideshow background with slow zoom
+   2. Hero kicker, headline, text and buttons float in once                    → Entrance animation: Float In
+   3. Sticky header: transparent over the photos, solid navy after the hero    → Header: sticky + background change on scroll
+   4. Pill buttons whose colour changes on hover                               → Button hover: color change
+   5. "Worship 10:30AM" photo strips glide in from alternating sides, once    → Entrance animation: Glide In
+   6. Photos uncover from the left / from below, or expand in                 → Entrance animations: Reveal / Expand In
+   7. Text blocks rise once                                                   → Entrance animation: Float In
+   8. "You belong here" and the numbers band: full-width photos with parallax → Strip background scroll effect: Parallax
+   9. Serve: photo cards that lighten, zoom and show their text on hover     → Hover Box (lighten + zoom + text)
+  + image hover zoom on every photo card, warm yellow highlight marker, photos inline in the welcome sentence.
+  All motion respects prefers-reduced-motion.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taipei International Church — Photo welcome</title>
+<link rel="preload" as="image" href="../new/img/sunday-worship.jpg" fetchpriority="high">
+<script>document.documentElement.classList.add(matchMedia('(prefers-reduced-motion: reduce)').matches ? 'still' : 'motion');</script>
+<style>
+  :root {
+    --blue: #046EB8; --sky: #0088CB; --navy: #0B2749; --yellow: #FFCB05;
+    --ink: #1B1B1B; --soft: #545454; --tint: #EEF5FA; --warm: #FFF7D6;
+    --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --ease: cubic-bezier(.22, 1, .36, 1); --io: cubic-bezier(.76, 0, .24, 1);
+    --g: clamp(16px, 4vw, 48px); --max: 1240px; --r: 18px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #fff; color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; height: auto; }
+  h1, h2, h3, p, figure, ul, ol { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  a { color: inherit; }
+  button { font: inherit; }
+  :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 6px; }
+  section[id] { scroll-margin-top: 84px; }
+  .wrap { width: 100%; max-width: calc(var(--max) + var(--g) * 2); margin: 0 auto; padding: 0 var(--g); }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* Shared type */
+  .kicker { display: inline-flex; align-items: center; gap: .7em; font-size: .78rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--blue); }
+  .kicker::before { content: ""; width: 28px; height: 3px; border-radius: 3px; background: var(--yellow); }
+  .on-dark .kicker { color: var(--yellow); }
+  .h2 { margin-top: .45em; font-size: clamp(2rem, 4.8vw, 3.7rem); line-height: 1.02; font-weight: 700; letter-spacing: -.02em; text-transform: uppercase; color: var(--navy); text-wrap: balance; }
+  .on-dark .h2 { color: #fff; }
+  .lead { font-size: clamp(1.05rem, 1.5vw, 1.2rem); color: var(--soft); max-width: 46ch; }
+  .on-dark .lead { color: #ffffffc7; }
+  .sec { padding: clamp(72px, 11vw, 140px) 0; }
+  .sec-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 48px; margin-bottom: clamp(32px, 5vw, 56px); }
+
+  /* ── Pill buttons: colour change on hover (Wix button hover) ── */
+  .btn {
+    --d: 2.5em; --m: .36em; --base: var(--yellow); --disk: var(--navy); --on: #fff; --ico: var(--yellow); --fg: var(--ink);
+    position: relative; display: inline-flex; align-items: center; gap: 1em;
+    padding: var(--m) var(--m) var(--m) 1.5em; border: 0; border-radius: 999px; background: var(--base); color: var(--fg);
+    font-size: 1rem; font-weight: 700; line-height: 1; letter-spacing: .01em; white-space: nowrap; text-decoration: none; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: color .35s, background-color .35s;
+  }
+  .btn .ico { flex: none; display: grid; place-items: center; width: var(--d); height: var(--d); border-radius: 50%; background: var(--disk); color: var(--ico); }
+  .btn .ico svg { width: 40%; height: 40%; }
+  .btn .ico svg + svg { display: none; }
+  @media (hover: hover) { .btn:hover { background: var(--disk); color: var(--on); } }
+  .btn:focus-visible { background: var(--disk); color: var(--on); }
+  .btn--light { --base: #ffffff1f; --fg: #fff; --disk: var(--yellow); --on: var(--ink); --ico: var(--ink); box-shadow: inset 0 0 0 1.5px #ffffff73; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .btn--blue { --base: var(--blue); --fg: #fff; --disk: var(--yellow); --on: var(--ink); --ico: var(--ink); }
+  .btn--navy { --base: var(--navy); --fg: #fff; --disk: var(--yellow); --on: var(--ink); --ico: var(--ink); }
+  .btn--sm { font-size: .9rem; }
+
+  .tlink { position: relative; display: inline-flex; align-items: center; gap: .45em; font-weight: 700; text-decoration: none; padding: 4px 0; }
+  .tlink::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--yellow); transition: opacity .3s; }
+  @media (hover: hover) { .tlink:hover::after { opacity: 0; } }
+
+  /* Photo frames with hover zoom */
+  .ph { position: relative; overflow: hidden; border-radius: var(--r); background: #c9d6e2; }
+  .ph img { width: 100%; height: 100%; object-fit: cover; transition: scale 1.1s var(--ease); }
+  @media (hover: hover) { .zoom:hover img, a:hover > .ph img, .zoom-host:hover .ph img { scale: 1.07; } }
+
+  /* Simple fade-up for text blocks (the curtains for photos are in JS) */
+  .motion .rise { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease) var(--dl, 0s), transform 1.1s var(--ease) var(--dl, 0s); }
+  .motion .rise.in { opacity: 1; transform: none; }
+
+  /* ═════════════ HEADER · sticky, background turns solid on scroll ═════════════ */
+  .hdr { position: fixed; inset: 0 0 auto; z-index: 50; color: #fff; }
+  .hdr::before { content: ""; position: absolute; inset: 0; background: #0b2749f0; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 10px 30px #0b274930; opacity: 0; transition: opacity .35s; }
+  .hdr.solid::before { opacity: 1; }
+  .hdr-row { position: relative; display: flex; align-items: center; gap: 24px; max-width: calc(1400px + var(--g) * 2); margin: 0 auto; padding: 14px var(--g); }
+  .logo { flex: none; display: grid; place-items: center; width: 70px; height: 62px; padding: 6px 8px; border-radius: 14px; background: #fff; box-shadow: 0 6px 22px #0b274929; }
+  .logo img { width: 100%; height: auto; }
+  .nav { display: flex; gap: clamp(14px, 2vw, 30px); margin-left: auto; font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .nav a { position: relative; text-decoration: none; padding: 6px 0; }
+  .nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--yellow); opacity: 0; transition: opacity .3s; }
+  .nav a:hover::after { opacity: 1; }
+  .hdr .btn { font-size: .85rem; }
+  .menu-btn { display: none; margin-left: auto; align-items: center; gap: 10px; padding: 10px 16px; border: 1.5px solid currentColor; border-radius: 999px; background: none; color: inherit; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+  .menu-btn i { position: relative; width: 16px; height: 2px; background: currentColor; border-radius: 2px; }
+  .menu-btn i::before { content: ""; position: absolute; left: 0; right: 0; top: -5px; height: 2px; background: currentColor; border-radius: 2px; box-shadow: 0 10px 0 currentColor; }
+  @media (max-width: 1080px) { .nav { display: none; } .menu-btn { display: inline-flex; } .hdr .btn { display: none; } }
+
+  .mnav { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; padding: 22px var(--g) 32px; background: var(--navy); color: #fff; overflow-y: auto; visibility: hidden; opacity: 0; transition: opacity .35s, visibility 0s .35s; }
+  .mnav.open { visibility: visible; opacity: 1; transition: opacity .35s; }
+  .mnav-top { display: flex; align-items: center; justify-content: space-between; }
+  .mnav-close { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid #ffffff59; background: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+  .mnav ul { margin: auto 0; padding: 28px 0; }
+  .mnav li a { display: block; padding: 8px 0; font-size: clamp(1.9rem, 8vw, 3rem); font-weight: 700; text-transform: uppercase; letter-spacing: -.01em; text-decoration: none; line-height: 1.1; }
+  .mnav li a:hover { color: var(--yellow); }
+  .mnav .mnav-foot { font-size: .95rem; color: #ffffffb3; }
+
+  /* ═════════════ HERO · slideshow, cross-fade + slow Ken Burns zoom ═════════════ */
+  .hero { position: relative; height: 100vh; height: 100svh; min-height: 620px; color: #fff; overflow: hidden; background: var(--navy); }
+  .slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 1.8s ease; }
+  .slide.on { opacity: 1; }
+  .slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* The Ken Burns: a slow pan + zoom, different for every photo; keeps running while it fades out (.out) */
+  .motion .slide.on img, .motion .slide.out img { animation: 11s linear both; }
+  .motion .slide[data-kb="a"]:is(.on, .out) img { animation-name: kb-a; }
+  .motion .slide[data-kb="b"]:is(.on, .out) img { animation-name: kb-b; }
+  .motion .slide[data-kb="c"]:is(.on, .out) img { animation-name: kb-c; }
+  .motion .slide[data-kb="d"]:is(.on, .out) img { animation-name: kb-d; }
+  @keyframes kb-a { from { transform: scale(1.03); } to { transform: scale(1.16) translate(-2%, -1.5%); } }
+  @keyframes kb-b { from { transform: scale(1.17) translate(2.5%, 1%); } to { transform: scale(1.03); } }
+  @keyframes kb-c { from { transform: scale(1.1) translate(-2.5%, 0); } to { transform: scale(1.14) translate(2.5%, -1%); } }
+  @keyframes kb-d { from { transform: scale(1.04) translate(0, 1.5%); } to { transform: scale(1.17) translate(1.5%, -2%); } }
+  .hero.paused .slide img { animation-play-state: paused !important; }
+  .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, #0b2749f2 0%, #0b2749b3 30%, #0b274926 62%, #0b274980 100%), linear-gradient(90deg, #0b274999, #0b274900 62%); }
+
+  .hero-copy { position: absolute; z-index: 2; left: var(--g); right: var(--g); bottom: clamp(104px, 15vh, 150px); max-width: 1000px; }
+  .hero-kicker { display: flex; align-items: center; gap: 12px; font-size: .8rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--yellow); }
+  .hero-kicker::before { content: ""; width: 34px; height: 3px; border-radius: 3px; background: var(--yellow); }
+  .hero h1 { margin-top: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: -.025em; line-height: .93; font-size: clamp(2.3rem, 9.4vw, 5.9rem); text-shadow: 0 4px 40px #0b274966; }
+  .ln { display: block; }
+  .ln.sm { font-size: .36em; letter-spacing: .16em; line-height: 1.3; font-weight: 700; margin-bottom: .1em; }
+  .hero-sub { margin-top: 22px; font-size: clamp(1.05rem, 1.7vw, 1.3rem); font-weight: 500; color: #ffffffe6; }
+  .hero-sub b { color: #fff; background: linear-gradient(var(--yellow), var(--yellow)) 0 92% / 100% 30% no-repeat; padding: 0 .1em; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .hero-links { display: flex; flex-wrap: wrap; gap: 6px 26px; margin-top: 18px; font-size: .92rem; }
+  .hero-links .tlink::after { background: #ffffff8c; }
+
+  .hero-ctrl { position: absolute; z-index: 3; right: var(--g); bottom: 34px; display: flex; align-items: center; gap: 16px; }
+  .hero-cap { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: #ffffffcc; white-space: nowrap; text-align: right; min-width: 15em; }
+  .hero-cap b { color: #fff; font-variant-numeric: tabular-nums; }
+  .marks { display: flex; gap: 6px; }
+  .marks button { position: relative; width: 44px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; }
+  .marks button::before, .marks i { content: ""; position: absolute; left: 0; right: 0; top: 11px; height: 3px; border-radius: 3px; background: #ffffff4d; }
+  .marks i { background: var(--yellow); opacity: 0; transition: opacity .3s; }
+  .marks button[aria-current="true"] i { opacity: 1; }
+  .pp { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #ffffff73; background: #0b274940; color: #fff; cursor: pointer; display: grid; place-items: center; transition: background .25s, color .25s; }
+  .pp:hover { background: var(--yellow); color: var(--ink); border-color: var(--yellow); }
+  .pp svg { width: 14px; height: 14px; }
+
+  /* Scroll cue (static) */
+  .scroll-cue { position: absolute; z-index: 3; left: 50%; bottom: 26px; display: grid; justify-items: center; gap: 10px; font-size: .66rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; text-decoration: none; color: #ffffffb3; transform: translateX(-50%); }
+  .scroll-cue i { position: relative; display: block; width: 2px; height: 54px; overflow: hidden; background: #ffffff33; border-radius: 2px; }
+  .scroll-cue i::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 50%; background: var(--yellow); }
+
+  @media (max-width: 1180px) { .scroll-cue { display: none; } }
+  @media (max-width: 760px) {
+    .hero-copy { bottom: 84px; }
+    .hero-ctrl { left: var(--g); right: var(--g); bottom: 22px; gap: 12px; }
+    .hero-cap { display: none; }
+    .marks { flex: 1; }
+    .marks button { flex: 1; width: auto; }
+    .hero-cta .btn { font-size: .95rem; }
+  }
+
+  /* ═════════════ WELCOME SENTENCE ═════════════ */
+  .intro { padding: clamp(64px, 10vw, 128px) 0; }
+  .intro-grid { display: grid; grid-template-columns: 150px 1fr; gap: clamp(24px, 4vw, 64px); align-items: start; }
+  .badge { display: grid; justify-items: start; gap: 12px; }
+  .badge img { width: 86px; }
+  .badge span { font-size: .78rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--blue); }
+  .badge strong { display: block; font-size: 2.4rem; letter-spacing: -.03em; color: var(--navy); line-height: 1; }
+  .intro-text { font-size: clamp(1.55rem, 3.7vw, 3.3rem); line-height: 1.2; font-weight: 500; letter-spacing: -.02em; color: var(--navy); max-width: 32ch; }
+  /* Small pill-shaped photos inside the sentence */
+  .pill { display: inline-block; width: 1.75em; height: .82em; margin: 0 .12em; vertical-align: -.06em; border-radius: 999px; overflow: hidden; background: #c9d6e2; }
+  .pill img { width: 100%; height: 100%; object-fit: cover; }
+  .hl { color: var(--blue); background: linear-gradient(var(--yellow), var(--yellow)) 0 90% / 100% 32% no-repeat; padding: 0 .06em; }
+  @media (max-width: 640px) { .intro-grid { grid-template-columns: 1fr; } .badge { grid-template-columns: auto 1fr; align-items: center; } .badge img { width: 58px; } }
+
+  /* ═════════════ SUNDAYS · strips Glide In + card hover zoom ═════════════ */
+  .sundays { background: var(--navy); color: #fff; overflow: hidden; overflow-x: clip; }
+  /* The five strips are slices of TIC's own "Worship 10:30AM" banner. They glide in once from alternating
+     sides and assemble into one picture (Wix: Glide In with a small delay per strip). */
+  .strips { display: grid; gap: 6px; width: 100%; margin: clamp(8px, 2vw, 24px) 0 clamp(40px, 6vw, 72px); }
+  .strip { width: 100%; height: auto; aspect-ratio: 16 / 1; object-fit: cover; }
+  .strip:nth-child(1) { --from: -42%; --i: 0; } .strip:nth-child(2) { --from: 34%; --i: 1; } .strip:nth-child(3) { --from: -26%; --i: 2; }
+  .strip:nth-child(4) { --from: 38%; --i: 3; } .strip:nth-child(5) { --from: -48%; --i: 4; }
+  .motion .strip { opacity: 0; transform: translateX(var(--from)); transition: transform 1.4s var(--ease) calc(var(--i) * 90ms), opacity 1s ease calc(var(--i) * 90ms); }
+  .motion .strips.in .strip { opacity: 1; transform: none; }
+  @media (max-width: 760px) { .strips { width: 140%; margin-left: -20%; gap: 4px; } }
+
+  .tcards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 26px); }
+  .tcard { position: relative; display: block; aspect-ratio: 4 / 5; border-radius: var(--r); overflow: hidden; text-decoration: none; color: #fff; background: #12335c; }
+  .tc-ph { position: absolute; inset: 0; overflow: hidden; }
+  .tc-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: scale 1.1s var(--ease); }
+  @media (hover: hover) { .tcard:hover .tc-ph img { scale: 1.06; } }
+  .tc-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, #0b2749f0 0%, #0b274980 42%, #0b274914 75%); }
+  .tc-frame { position: absolute; inset: 14px; border: 1.5px solid #ffffff59; border-radius: 12px; pointer-events: none; }
+  .tc-body { position: absolute; left: 30px; right: 30px; bottom: 30px; display: grid; gap: 6px; }
+  .tc-time { font-size: clamp(2.2rem, 4.4vw, 3.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1; color: var(--yellow); }
+  .tc-title { font-size: 1.15rem; text-transform: uppercase; letter-spacing: .06em; }
+  .tc-meta { font-size: .95rem; color: #ffffffcc; }
+  .tc-go { position: absolute; top: 28px; right: 28px; width: 44px; height: 44px; border-radius: 50%; background: var(--yellow); color: var(--ink); display: grid; place-items: center; scale: .86; transition: scale .4s var(--ease); }
+  .tcard:hover .tc-go { scale: 1.12; }
+  .tc-go svg { width: 16px; height: 16px; }
+  @media (max-width: 900px) { .tc-body { left: 20px; right: 16px; bottom: 22px; } .tc-go { top: 22px; right: 22px; } .tc-title { font-size: .86rem; letter-spacing: .03em; } .tc-meta { font-size: .85rem; } }
+  @media (max-width: 680px) { .tcards { grid-template-columns: 1fr; } .tcard { aspect-ratio: 16 / 11; } .tc-title { font-size: 1rem; letter-spacing: .06em; } .tc-meta { font-size: .95rem; } }
+
+  /* ═════════════ NEW HOME ═════════════ */
+  .home { background: var(--warm); }
+  .home-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 90px); align-items: center; }
+  .home-text p.lead { margin-top: 22px; }
+  .addr { display: grid; grid-template-columns: 52px 1fr; gap: 18px; align-items: start; margin-top: 30px; padding: 22px; border-radius: var(--r); background: #fff; box-shadow: 0 18px 40px #8a6a0014; }
+  .addr img { width: 44px; }
+  .addr strong { display: block; color: var(--navy); font-size: 1.05rem; }
+  .addr span { display: block; font-size: .95rem; color: var(--soft); margin-top: 4px; }
+  .home-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 28px; }
+  .collage { position: relative; padding-bottom: 22%; }
+  .collage .c-main { aspect-ratio: 4 / 3; box-shadow: 0 30px 60px #0b27492e; }
+  .collage .c-map { position: absolute; left: -6%; bottom: 0; width: 72%; aspect-ratio: 1200 / 509; border: 6px solid #fff; border-radius: 16px; box-shadow: 0 24px 50px #0b274938; }
+  .collage .c-tag { position: absolute; right: 4%; bottom: 7%; display: grid; place-items: center; width: 118px; height: 118px; border-radius: 50%; background: var(--yellow); color: var(--navy); text-align: center; font-weight: 700; line-height: 1.05; box-shadow: 0 18px 40px #8a6a0033; }
+  .c-tag b { display: block; font-size: 2.2rem; letter-spacing: -.04em; }
+  .c-tag small { display: block; font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; }
+  @media (max-width: 900px) { .home-grid { grid-template-columns: 1fr; } .collage .c-map { left: 0; } }
+  @media (max-width: 520px) { .collage .c-tag { width: 92px; height: 92px; } .c-tag b { font-size: 1.7rem; } .c-tag small { font-size: .58rem; } }
+
+  /* ═════════════ FIRST SUNDAY ═════════════ */
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); counter-reset: step; }
+  .step .ph { aspect-ratio: 4 / 3.4; }
+  .step-n { position: relative; z-index: 2; display: grid; place-items: center; width: 54px; height: 54px; margin: -27px 0 0 20px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-weight: 700; font-size: 1.05rem; box-shadow: 0 0 0 6px #fff; }
+  .step h3 { margin-top: 16px; font-size: 1.12rem; text-transform: uppercase; letter-spacing: .04em; color: var(--navy); line-height: 1.25; }
+  .step p { margin-top: 8px; color: var(--soft); font-size: .98rem; }
+  @media (max-width: 980px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; } }
+  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+  /* ═════════════ YOU BELONG HERE · full-screen photo with parallax background ═════════════ */
+  .belong { position: relative; height: 100vh; height: 100svh; min-height: 560px; overflow: hidden; background: var(--navy); }
+  .belong-img { position: absolute; inset: -100px 0; width: 100%; height: calc(100% + 200px); max-width: none; object-fit: cover; }
+  .belong::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, #0b2749f0, #0b274973 55%, #0b274940); }
+  .btitle { position: absolute; z-index: 1; inset: auto var(--g) clamp(48px, 10vh, 110px); max-width: 1100px; margin: 0 auto; color: #fff; }
+  .btitle h2 { margin-top: 14px; font-size: clamp(2.8rem, 9vw, 8rem); font-weight: 700; text-transform: uppercase; line-height: .9; letter-spacing: -.035em; }
+  .btitle h2 span { color: var(--yellow); }
+  .btitle p { margin-top: 22px; max-width: 40ch; font-size: clamp(1.1rem, 1.9vw, 1.45rem); line-height: 1.4; color: #ffffffe6; }
+  .btitle p small { display: block; margin-bottom: 6px; font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: var(--yellow); font-weight: 700; }
+  .btitle .btn { margin-top: 26px; }
+
+  /* ═════════════ ABOUT ═════════════ */
+  .about-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(36px, 6vw, 90px); align-items: center; }
+  .about-grid .lead { margin-top: 22px; }
+  .mission { margin-top: 30px; }
+  .mission small { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--soft); }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .chips li { padding: 10px 18px; border-radius: 999px; background: var(--tint); color: var(--blue); font-weight: 700; font-size: .92rem; letter-spacing: .08em; text-transform: uppercase; transition: background .3s, color .3s; }
+  .chips li:hover { background: var(--yellow); color: var(--navy); }
+  .about-ph { aspect-ratio: 5 / 4; }
+  .about-ph figcaption { position: absolute; left: 18px; bottom: 18px; padding: 8px 14px; border-radius: 999px; background: #fff; color: var(--navy); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .values { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: clamp(48px, 7vw, 88px); }
+  .val { position: relative; padding: 26px 22px 24px; border-radius: var(--r); background: var(--tint); overflow: hidden; transition: transform .5s var(--ease), background .4s; }
+  .val::before { content: ""; position: absolute; left: 0; top: 0; height: 4px; width: 100%; background: var(--yellow); transform: scaleX(.18); transform-origin: left; transition: transform .6s var(--ease); }
+  .val:hover { transform: translateY(-6px); background: #e4f0f9; }
+  .val:hover::before { transform: scaleX(1); }
+  .val span { font-size: .8rem; font-weight: 700; color: var(--blue); letter-spacing: .1em; }
+  .val h3 { margin-top: 10px; font-size: 1.02rem; text-transform: uppercase; letter-spacing: .04em; color: var(--navy); line-height: 1.25; }
+  .val p { margin-top: 8px; font-size: .94rem; color: var(--soft); line-height: 1.5; }
+  @media (max-width: 1080px) { .values { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .values { grid-template-columns: 1fr; } }
+
+  .skyband { position: relative; overflow: hidden; color: #fff; background: var(--navy); }
+  .skyband .sky-img { position: absolute; inset: -90px 0; width: 100%; height: calc(100% + 180px); max-width: none; object-fit: cover; }
+  .skyband::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #0b2749e6, #0b274999); }
+  .stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-block: clamp(56px, 8vw, 100px); }
+  .stat { border-left: 3px solid var(--yellow); padding-left: clamp(16px, 2vw, 26px); }
+  .stat b { display: block; font-size: clamp(2.8rem, 7vw, 5.4rem); line-height: 1; letter-spacing: -.04em; }
+  .stat span { display: block; margin-top: 10px; font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #ffffffcc; }
+  @media (max-width: 640px) { .stats { grid-template-columns: 1fr; gap: 30px; } }
+
+  /* ═════════════ FAMILIES ═════════════ */
+  .families { background: var(--warm); overflow: hidden; overflow-x: clip; }
+  .fam-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(36px, 6vw, 90px); align-items: center; }
+  .fam-col { position: relative; padding: 0 0 18% 0; }
+  .fam-col .f-main { aspect-ratio: 4 / 3.2; box-shadow: 0 30px 60px #8a6a0024; }
+  .fam-col .f-a { position: absolute; right: -4%; bottom: 0; width: 46%; aspect-ratio: 1; border: 6px solid var(--warm); border-radius: 22px; }
+  .fam-col .f-b { position: absolute; left: 6%; bottom: 4%; width: 34%; aspect-ratio: 4 / 5; border: 6px solid var(--warm); border-radius: 22px; }
+  .progs { display: grid; gap: 14px; margin-top: 30px; }
+  .prog { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; padding: 22px 24px; border-radius: var(--r); background: #fff; box-shadow: 0 14px 34px #8a6a0012; }
+  .prog i { grid-row: span 3; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-style: normal; }
+  .prog i svg { width: 24px; height: 24px; }
+  .prog h3 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: .05em; color: var(--navy); }
+  .prog .when { font-size: .88rem; font-weight: 700; color: var(--blue); letter-spacing: .04em; }
+  .prog p { font-size: .96rem; color: var(--soft); }
+  @media (max-width: 900px) { .fam-grid { grid-template-columns: 1fr; } .fam-col { order: 2; } .fam-col .f-a { right: 0; } }
+
+  /* ═════════════ GROUPS ═════════════ */
+  .grp-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 90px); align-items: start; }
+  .grp-photos { position: sticky; top: 110px; padding-bottom: 30%; }
+  .grp-photos .g-main { aspect-ratio: 4 / 3.3; }
+  .grp-photos .g-a { position: absolute; left: -5%; bottom: 0; width: 52%; aspect-ratio: 4 / 3; border: 6px solid #fff; border-radius: 20px; box-shadow: 0 20px 44px #0b274929; }
+  .grp-photos .g-b { position: absolute; right: 2%; bottom: 8%; width: 40%; aspect-ratio: 1; border: 6px solid #fff; border-radius: 50%; box-shadow: 0 20px 44px #0b274929; }
+  .glist { border-top: 1px solid #0b27491f; margin-top: 30px; }
+  .gitem { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 20px 18px 20px 22px; border-bottom: 1px solid #0b27491f; transition: background .35s; }
+  .gitem::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 4px; background: var(--yellow); transform: scaleY(0); transition: transform .45s var(--ease); }
+  .gitem:hover { background: var(--tint); }
+  .gitem:hover::before { transform: none; }
+  .gitem h3 { font-size: 1.08rem; color: var(--navy); }
+  .gitem p { grid-column: 1; font-size: .95rem; color: var(--soft); }
+  .gitem p b { color: var(--ink); font-weight: 700; }
+  .tag { grid-column: 2; grid-row: 1 / span 2; align-self: center; padding: 6px 12px; border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+  .tag.in { background: var(--yellow); color: var(--navy); }
+  .tag.on { background: var(--tint); color: var(--blue); box-shadow: inset 0 0 0 1.5px #046eb840; }
+  @media (max-width: 900px) { .grp-grid { grid-template-columns: 1fr; } .grp-photos { position: relative; top: 0; } .grp-photos .g-a { left: 0; } }
+  @media (max-width: 480px) { .gitem { grid-template-columns: 1fr; padding-inline: 16px 6px; } .tag { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 6px; } }
+
+  /* ═════════════ SERVE · photo cards with hover (Wix Hover Box: lighten + zoom + text) ═════════════ */
+  .serve { background: var(--navy); color: #fff; }
+  .acc { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; height: clamp(420px, 46vw, 560px); }
+  .panel { position: relative; min-width: 0; border-radius: var(--r); overflow: hidden; color: #fff; background: #12335c; }
+  .panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.55) brightness(.62); transition: filter .6s, scale 1.1s var(--ease); }
+  .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, #0b2749e0, #0b274900 55%); }
+  .pv { position: absolute; z-index: 1; left: 50%; bottom: 26px; writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg); font-size: .92rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; transition: opacity .3s; }
+  .pv b { color: var(--yellow); margin-inline-end: .8em; }
+  .ph-body { position: absolute; z-index: 1; left: 22px; right: 22px; bottom: 24px; opacity: 0; transition: opacity .4s; }
+  .ph-body small { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--yellow); }
+  .ph-body strong { display: block; margin-top: 6px; font-size: clamp(1.3rem, 2vw, 1.9rem); text-transform: uppercase; letter-spacing: -.01em; line-height: 1; }
+  @media (hover: hover) {
+    .panel:hover img { filter: none; scale: 1.06; }
+    .panel:hover .pv { opacity: 0; }
+    .panel:hover .ph-body { opacity: 1; }
+  }
+  @media (hover: none) { .panel img { filter: saturate(.85) brightness(.8); } .pv { display: none; } .ph-body { opacity: 1; } }
+  .serve-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-top: 30px; }
+  .serve-foot p { color: #ffffffc7; }
+  @media (max-width: 900px) {
+    .acc { grid-template-columns: repeat(2, minmax(0, 1fr)); height: auto; grid-auto-rows: 220px; }
+    .panel:first-child { grid-column: 1 / -1; }
+    .pv { left: 22px; bottom: 22px; writing-mode: horizontal-tb; transform: none; }
+  }
+  @media (max-width: 520px) { .acc { grid-template-columns: 1fr; grid-auto-rows: 180px; } }
+
+  /* ═════════════ STORIES ═════════════ */
+  .stories { background: var(--tint); }
+  .st-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 18px; }
+  .st-feature { position: relative; min-height: 100%; border-radius: var(--r); overflow: hidden; color: #fff; background: var(--navy); }
+  .st-feature .ph { position: absolute; inset: 0; border-radius: 0; }
+  .st-feature .ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, #0b2749f2, #0b274933 60%); }
+  .st-feature blockquote { position: absolute; left: 28px; right: 28px; bottom: 28px; margin: 0; font-size: clamp(1.35rem, 2.2vw, 1.8rem); font-weight: 700; line-height: 1.18; letter-spacing: -.01em; }
+  .st-feature blockquote::before { content: "\201C"; display: block; font-size: 4rem; line-height: .6; color: var(--yellow); margin-bottom: 8px; }
+  .st-feature cite { display: block; margin-top: 14px; font-size: .75rem; font-style: normal; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--yellow); }
+  .st-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .story { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px 26px 22px; border-radius: var(--r); background: #fff; text-decoration: none; overflow: hidden; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+  .story::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 4px; background: var(--yellow); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); }
+  .story:hover { transform: translateY(-5px); box-shadow: 0 22px 44px #0b27491c; }
+  .story:hover::before { transform: none; }
+  .story .meta { font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); }
+  .story h3 { font-size: 1.3rem; text-transform: uppercase; letter-spacing: .01em; color: var(--navy); line-height: 1.1; }
+  .story p { font-size: .96rem; color: var(--soft); line-height: 1.5; }
+  .story .listen { margin-top: auto; padding-top: 8px; display: inline-flex; align-items: center; gap: 10px; font-size: .88rem; font-weight: 700; color: var(--navy); }
+  .story .listen i { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--yellow); transition: transform .4s var(--ease); }
+  .story:hover .listen i { transform: scale(1.12); }
+  .story .listen svg { width: 12px; height: 12px; margin-left: 2px; }
+  @media (max-width: 980px) { .st-grid { grid-template-columns: 1fr; } .st-feature { min-height: 380px; } }
+  @media (max-width: 600px) { .st-cards { grid-template-columns: 1fr; } }
+
+  /* ═════════════ TEAM ═════════════ */
+  .staff { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
+  .member .ph { aspect-ratio: 1; border-radius: 22px; }
+  .member .ph::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 0 var(--yellow); transition: box-shadow .45s var(--ease); }
+  .member:hover .ph::after { box-shadow: inset 0 0 0 6px var(--yellow); }
+  .member h3 { margin-top: 14px; font-size: 1.05rem; color: var(--navy); }
+  .member p { font-size: .9rem; color: var(--soft); line-height: 1.4; margin-top: 2px; }
+  .elders { margin-top: clamp(40px, 6vw, 64px); padding-top: 28px; border-top: 1px solid #0b27491f; }
+  .elders > small { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--soft); }
+  .elders ul { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+  .elder { display: flex; align-items: center; gap: 12px; }
+  .elder .ph { flex: none; width: 58px; height: 58px; border-radius: 50%; }
+  .elder b { display: block; font-size: .95rem; color: var(--navy); line-height: 1.2; }
+  .elder span { display: block; font-size: .8rem; color: var(--soft); }
+  @media (max-width: 1080px) { .staff { grid-template-columns: repeat(3, minmax(0, 1fr)); } .elders ul { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .staff { grid-template-columns: repeat(2, minmax(0, 1fr)); } .elders ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* ═════════════ GIVE & PRAY ═════════════ */
+  .give { background: linear-gradient(#fff, var(--tint)); }
+  .gp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .gcard { position: relative; padding: clamp(28px, 4vw, 48px); border-radius: 24px; overflow: hidden; }
+  .gcard.g1 { background: var(--warm); }
+  .gcard.g2 { background: var(--blue); color: #fff; }
+  .gcard.g2 .ph { position: absolute; inset: 0; border-radius: 0; opacity: .22; }
+  .gcard.g2 .ph img { filter: grayscale(.3); }
+  .gcard > * { position: relative; }
+  .gcard h3 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); text-transform: uppercase; letter-spacing: -.01em; line-height: 1; color: var(--navy); }
+  .gcard.g2 h3 { color: #fff; }
+  .ways { margin-top: 24px; display: grid; gap: 12px; }
+  .ways li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; padding: 16px 18px; border-radius: 14px; background: #ffffffb3; }
+  .gcard.g2 .ways li { background: #0b27494d; }
+  .ways i { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-style: normal; font-weight: 700; font-size: .85rem; }
+  .ways b { display: block; color: var(--navy); }
+  .gcard.g2 .ways b { color: #fff; }
+  .ways span { display: block; font-size: .94rem; color: var(--soft); line-height: 1.45; margin-top: 2px; overflow-wrap: anywhere; }
+  .gcard.g2 .ways span { color: #ffffffd1; }
+  .ways a { font-weight: 700; }
+  .gcard .btn { margin-top: 26px; }
+  @media (max-width: 860px) { .gp { grid-template-columns: 1fr; } }
+
+  /* ═════════════ FOOTER ═════════════ */
+  .foot { background: var(--navy); color: #ffffffd9; padding: clamp(60px, 8vw, 96px) 0 28px; font-size: .96rem; }
+  .foot-top { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 36px; }
+  .foot .logo { width: 92px; height: 82px; box-shadow: none; }
+  .foot h4 { margin: 0 0 12px; font-size: .75rem; letter-spacing: .22em; text-transform: uppercase; color: var(--yellow); }
+  .foot p, .foot li { line-height: 1.55; }
+  .foot a { text-decoration: none; }
+  .foot a:hover { color: var(--yellow); }
+  .foot-brand p { margin-top: 18px; max-width: 30ch; }
+  .social { display: grid; gap: 6px; }
+  .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; margin-top: clamp(40px, 6vw, 64px); padding-top: 22px; border-top: 1px solid #ffffff21; font-size: .85rem; color: #ffffff99; }
+  .credit { font-size: .72rem; letter-spacing: .04em; color: #ffffff66; }
+  @media (max-width: 900px) { .foot-top { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .foot-top { grid-template-columns: 1fr; } }
+
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  @media (prefers-reduced-motion: reduce) {
+    .slide { transition-duration: .4s; }
+    .btn, .panel img, .ph img, .tcard *, .hdr::before { transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ───────────── Header ───────────── -->
+<header class="hdr" id="hdr">
+  <div class="hdr-row">
+    <a class="logo" href="#top" aria-label="Taipei International Church — home"><img src="../new/img/tic-logo.png" alt="TIC — Taipei International Church" width="1077" height="961"></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#about">About</a><a href="#sundays">Sundays</a><a href="#families">Families</a><a href="#groups">Groups</a><a href="#serve">Serve</a><a href="#stories">Stories</a><a href="#give">Give</a>
+    </nav>
+    <a class="btn btn--sm" href="#visit"><span class="txt">Plan your visit</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav"><i></i>Menu</button>
+  </div>
+</header>
+
+<div class="mnav" id="mnav" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="mnav-top">
+    <a class="logo" href="#top"><img src="../new/img/tic-logo.png" alt="TIC" width="1077" height="961"></a>
+    <button class="mnav-close" id="menuClose" type="button" aria-label="Close menu">✕</button>
+  </div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#sundays">Sundays</a></li>
+    <li><a href="#visit">Plan your visit</a></li>
+    <li><a href="#families">Families</a></li>
+    <li><a href="#groups">Groups</a></li>
+    <li><a href="#serve">Serve</a></li>
+    <li><a href="#stories">Stories</a></li>
+    <li><a href="#give">Give &amp; pray</a></li>
+  </ul>
+  <p class="mnav-foot">Sundays 10:30 AM in Dazhi · 11:00 AM online<br><a href="mailto:info@taipeichurch.org">info@taipeichurch.org</a></p>
+</div>
+
+<main id="top">
+
+  <!-- ───────────── Hero slideshow ───────────── -->
+  <section class="hero" id="hero" aria-roledescription="carousel" aria-label="Photos from TIC">
+    <figure class="slide on" data-kb="a" data-cap="Sunday worship"><img src="../new/img/sunday-worship.jpg" alt="Sunday worship at the TIC Worship Center" fetchpriority="high" width="1200" height="799"></figure>
+    <figure class="slide" data-kb="b" data-cap="Worship team"><img src="../new/img/worship-band.jpg" alt="The TIC worship team leading songs" decoding="async" width="1200" height="800"></figure>
+    <figure class="slide" data-kb="c" data-cap="Praise"><img src="../new/img/praise.jpg" alt="People raising their hands in praise during the service" decoding="async" width="1200" height="798"></figure>
+    <figure class="slide" data-kb="d" data-cap="Our congregation"><img src="../new/img/congregation.jpg" alt="The congregation gathered for Sunday worship" decoding="async" width="1200" height="800"></figure>
+    <figure class="slide" data-kb="b" data-cap="Christmas worship"><img src="../new/img/christmas-worship.jpg" alt="Christmas worship at TIC" decoding="async" width="1200" height="799"></figure>
+
+    <div class="hero-copy">
+      <p class="hero-kicker" id="heroKicker">Since 1957 · Dazhi, Taipei</p>
+      <h1 aria-label="Welcome to Taipei International Church">
+        <span class="ln sm" aria-hidden="true"><span>Welcome to</span></span>
+        <span class="ln" aria-hidden="true"><span>Taipei</span></span>
+        <span class="ln" aria-hidden="true"><span>International</span></span>
+        <span class="ln" aria-hidden="true"><span>Church</span></span>
+      </h1>
+      <p class="hero-sub" id="heroSub">Sunday worship service at <b>10:30 AM</b> in Dazhi</p>
+      <div class="hero-cta" id="heroCta">
+        <a class="btn" href="#visit"><span class="txt">Plan your visit</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+        <a class="btn btn--light" href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener"><span class="txt">Watch online · 11:00 AM</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L13 8z"/></svg><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L13 8z"/></svg></span></a>
+      </div>
+      <div class="hero-links" id="heroLinks">
+        <a class="tlink" href="#">Newsletter sign up</a>
+        <a class="tlink" href="https://www.google.com/maps/search/?api=1&amp;query=Taipei+International+Church+Mingshui+Rd+Lane+397+Alley+7+No+41" target="_blank" rel="noopener">Map ↗</a>
+      </div>
+    </div>
+
+    <div class="hero-ctrl">
+      <p class="hero-cap" aria-live="polite"><b id="capNum">01 / 05</b> &nbsp;·&nbsp; <span id="capTxt">Sunday worship</span></p>
+      <div class="marks" id="marks"></div>
+      <button class="pp" id="pp" type="button" aria-label="Pause slideshow"></button>
+    </div>
+    <a class="scroll-cue" href="#welcome" aria-label="Scroll to the welcome"><span>Scroll</span><i></i></a>
+  </section>
+
+  <!-- ───────────── Welcome sentence ───────────── -->
+  <section class="intro" id="welcome">
+    <div class="wrap intro-grid">
+      <div class="badge rise"><img src="../new/img/tic-pin.png" alt="" width="277" height="434" loading="lazy"><div><span>Since</span><strong>1957</strong></div></div>
+      <p class="intro-text rise" style="--dl:.1s">A multicultural <span class="pill"><img src="../new/img/church-family.jpg" alt="" loading="lazy"></span> multigenerational, English-speaking church <span class="pill"><img src="../new/img/worship-singers.jpg" alt="" loading="lazy"></span> filled with the power of the Holy Spirit. <span class="hl">You belong here.</span></p>
+    </div>
+  </section>
+
+  <!-- ───────────── Sundays ───────────── -->
+  <section class="sundays sec on-dark" id="sundays">
+    <div class="wrap sec-head">
+      <div class="rise"><p class="kicker">Sundays at TIC</p><h2 class="h2">Worship with us</h2></div>
+      <p class="lead rise" style="--dl:.1s">In person in Dazhi, live online, and a full program for kids — every Sunday.</p>
+    </div>
+
+    <div class="strips" aria-hidden="true">
+      <img class="strip" src="../new/img/strip-1.jpg" alt="" width="1600" height="100" loading="lazy">
+      <img class="strip" src="../new/img/strip-2.jpg" alt="" width="1600" height="100" loading="lazy">
+      <img class="strip" src="../new/img/strip-3.jpg" alt="" width="1600" height="100" loading="lazy">
+      <img class="strip" src="../new/img/strip-4.jpg" alt="" width="1600" height="100" loading="lazy">
+      <img class="strip" src="../new/img/strip-5.jpg" alt="" width="1600" height="100" loading="lazy">
+    </div>
+
+    <div class="wrap tcards">
+      <a class="tcard rise" href="#visit">
+        <span class="tc-ph"><img src="../new/img/worship-singers.jpg" alt="" loading="lazy"></span>
+        <span class="tc-frame"></span>
+        <span class="tc-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span>
+        <span class="tc-body"><span class="tc-time">10:30 AM</span><strong class="tc-title">Worship in person</strong><span class="tc-meta">B1, TIC Worship Center, Dazhi</span></span>
+      </a>
+      <a class="tcard rise" style="--dl:.1s" href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener">
+        <span class="tc-ph"><img src="../new/img/media-camera.jpg" alt="" loading="lazy"></span>
+        <span class="tc-frame"></span>
+        <span class="tc-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L13 8z"/></svg></span>
+        <span class="tc-body"><span class="tc-time">11:00 AM</span><strong class="tc-title">Online service</strong><span class="tc-meta">Live on YouTube</span></span>
+      </a>
+      <a class="tcard rise" style="--dl:.2s" href="#families">
+        <span class="tc-ph"><img src="../new/img/kids-worship.jpg" alt="" loading="lazy"></span>
+        <span class="tc-frame"></span>
+        <span class="tc-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span>
+        <span class="tc-body"><span class="tc-time">11:20 AM</span><strong class="tc-title">TIC Kids</strong><span class="tc-meta">Pre-K to grade 5</span></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ───────────── Our new home ───────────── -->
+  <section class="home sec" id="visit">
+    <div class="wrap home-grid">
+      <div class="home-text">
+        <p class="kicker rise">Our new home</p>
+        <h2 class="h2 rise" style="--dl:.05s">We've moved to our new home!</h2>
+        <p class="lead rise" style="--dl:.1s">We have officially moved into our new venue: a warm and beautiful space where we can worship and keep growing together in faith and fellowship.</p>
+        <div class="addr rise" style="--dl:.15s">
+          <img src="../new/img/tic-pin.png" alt="" width="277" height="434" loading="lazy">
+          <div>
+            <strong>B1 at the TIC Worship Center — a 6-minute walk from Dazhi MRT Station</strong>
+            <span>B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei City 10466</span>
+          </div>
+        </div>
+        <div class="home-cta rise" style="--dl:.2s">
+          <a class="btn btn--blue" href="https://www.google.com/maps/search/?api=1&amp;query=Taipei+International+Church+Mingshui+Rd+Lane+397+Alley+7+No+41" target="_blank" rel="noopener"><span class="txt">Open in Google Maps</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+          <a class="tlink" href="#first-sunday">Your first Sunday ↓</a>
+        </div>
+      </div>
+      <div class="collage">
+        <figure class="ph c-main zoom" data-reveal="wipe"><img src="../new/img/entrance.jpg" alt="The entrance to the TIC Worship Center with the blue TIC sign" loading="lazy" width="1200" height="791"></figure>
+        <figure class="ph c-map zoom" data-reveal="rise"><img src="../new/img/walk-map.jpg" alt="Walking map: 6 minutes from Dazhi MRT Station to TIC" loading="lazy" width="1200" height="509"></figure>
+        <p class="c-tag"><span><b>6 min</b><small>walk from<br>Dazhi MRT</small></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Your first Sunday ───────────── -->
+  <section class="sec" id="first-sunday">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><p class="kicker">What to expect</p><h2 class="h2">Your first Sunday</h2></div>
+        <p class="lead rise" style="--dl:.1s">Visiting for the first time? Here's how a Sunday morning at TIC works.</p>
+      </div>
+      <ol class="steps">
+        <li class="step zoom-host">
+          <figure class="ph" data-reveal="rise"><img src="../new/img/welcome-sign.jpg" alt="The blue TIC welcome sign at the entrance" loading="lazy" width="1200" height="800"></figure>
+          <span class="step-n">01</span>
+          <h3>Arrive a little before 10:30</h3>
+          <p>Look for the blue TIC sign and head down to B1.</p>
+        </li>
+        <li class="step zoom-host">
+          <figure class="ph" data-reveal="rise"><img src="../new/img/sunday-worship.jpg" alt="Families worshipping together" loading="lazy" width="1200" height="799" style="object-position:30% 50%"></figure>
+          <span class="step-n">02</span>
+          <h3>Worship together</h3>
+          <p>Families stay together for the singing, then children from Pre-K to grade 12 go to their programs.</p>
+        </li>
+        <li class="step zoom-host">
+          <figure class="ph" data-reveal="rise"><img src="../new/img/preschool.jpg" alt="Children in the preschool program" loading="lazy" width="1200" height="799"></figure>
+          <span class="step-n">03</span>
+          <h3>Check in your kids</h3>
+          <p>A parent or authorized adult checks each child in and out. Nursery care during the service.</p>
+        </li>
+        <li class="step zoom-host">
+          <figure class="ph" data-reveal="rise"><img src="../new/img/hospitality.jpg" alt="Smiling members of the hospitality team" loading="lazy" width="1200" height="799"></figure>
+          <span class="step-n">04</span>
+          <h3>Say hello at the welcome table</h3>
+          <p>Ask questions, sign up for the newsletter or find a way to serve.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ───────────── You belong here (full-screen photo, parallax) ───────────── -->
+  <section class="belong plx" aria-label="You belong here">
+    <img class="belong-img layer" style="--v:80" src="../new/img/church-family.jpg" alt="The TIC church family together in the Worship Center" loading="lazy" width="1200" height="753">
+    <div class="btitle rise">
+        <p class="kicker" style="color:var(--yellow)">Since 1957</p>
+        <h2>You belong <span>here.</span></h2>
+        <p><small>Our vision</small>Disciples who shine the light of God's love on Taipei, Taiwan and the world.</p>
+        <a class="btn" href="#about"><span class="txt">About the church</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+      </div>
+  </section>
+
+  <!-- ───────────── About ───────────── -->
+  <section class="sec" id="about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div>
+          <p class="kicker rise">Who we are</p>
+          <h2 class="h2 rise" style="--dl:.05s">About the church</h2>
+          <p class="lead rise" style="--dl:.1s">Taipei International Church is a non-denominational, English-speaking church, welcoming people from every nation and background since 1957.</p>
+          <div class="mission rise" style="--dl:.15s">
+            <small>Our mission areas</small>
+            <ul class="chips"><li>Worship</li><li>Connect</li><li>Grow</li><li>Serve</li><li>Go</li></ul>
+          </div>
+        </div>
+        <figure class="ph about-ph zoom" data-reveal="expand"><img src="../new/img/preaching.jpg" alt="Preaching on a Sunday at TIC" loading="lazy" width="1200" height="600"><figcaption>Bible based</figcaption></figure>
+      </div>
+
+      <ul class="values">
+        <li class="val rise"><span>01</span><h3>Bible based</h3><p>Scripture shapes what we believe and how we live.</p></li>
+        <li class="val rise" style="--dl:.06s"><span>02</span><h3>Valuing diversity</h3><p>Many nations, cultures and ages, united in Christ.</p></li>
+        <li class="val rise" style="--dl:.12s"><span>03</span><h3>Expecting transformation</h3><p>"Come as you are, but don't stay as you came."</p></li>
+        <li class="val rise" style="--dl:.18s"><span>04</span><h3>Building community</h3><p>Life happens in small groups and serving teams.</p></li>
+        <li class="val rise" style="--dl:.24s"><span>05</span><h3>Practicing servanthood</h3><p>Following Jesus by serving others.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="skyband plx" aria-label="TIC in numbers">
+    <img class="sky-img layer" style="--v:70" src="../new/img/taipei-skyline.jpg" alt="" loading="lazy" width="1200" height="801">
+    <div class="wrap stats">
+      <div class="stat rise"><b>1957</b><span>First service</span></div>
+      <div class="stat rise" style="--dl:.1s"><b>5</b><span>Mission areas</span></div>
+      <div class="stat rise" style="--dl:.2s"><b>B1</b><span>Our home in Dazhi</span></div>
+    </div>
+  </section>
+
+  <!-- ───────────── Families ───────────── -->
+  <section class="families sec" id="families">
+    <div class="wrap fam-grid">
+      <div class="fam-col">
+        <figure class="ph f-main zoom" data-reveal="wipe"><img src="../new/img/kids-stage.jpg" alt="TIC Kids singing on stage" loading="lazy" width="1200" height="800"></figure>
+        <figure class="ph f-a zoom" data-reveal="expand"><img src="../new/img/kids-worship.jpg" alt="Children worshipping in TIC Kids" loading="lazy" width="1200" height="800"></figure>
+        <figure class="ph f-b zoom" data-reveal="rise"><img src="../new/img/preschool.jpg" alt="A preschool class" loading="lazy" width="1200" height="799" style="object-position:40% 50%"></figure>
+      </div>
+      <div>
+        <p class="kicker rise">Families</p>
+        <h2 class="h2 rise" style="--dl:.05s">Room for the whole family</h2>
+        <p class="lead rise" style="--dl:.1s">Families worship together, then kids head to programs made for their age.</p>
+        <div class="progs">
+          <div class="prog rise" style="--dl:.12s">
+            <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01M15 12h.01M10 16c.6.5 1.3.7 2 .7s1.4-.2 2-.7"/><path d="M19 6.3a9 9 0 1 1-14 0M12 3c1.5 0 2.5 1 2.5 2.2"/></svg></i>
+            <h3>Nursery</h3>
+            <span class="when">Infants &amp; toddlers · during the 10:30 service</span>
+            <p>Care for the little ones while parents worship.</p>
+          </div>
+          <div class="prog rise" style="--dl:.18s">
+            <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg></i>
+            <h3>TIC Kids</h3>
+            <span class="when">Pre-K – grade 5 · 11:20–12:00</span>
+            <p>Worship, Bible teaching and small groups by grade.</p>
+          </div>
+        </div>
+        <div class="home-cta rise" style="--dl:.22s"><a class="btn btn--navy" href="#"><span class="txt">Families at TIC</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Groups ───────────── -->
+  <section class="sec" id="groups">
+    <div class="wrap grp-grid">
+      <div class="grp-photos">
+        <figure class="ph g-main zoom" data-reveal="wipe"><img src="../new/img/small-group.jpg" alt="A small group meeting at TIC" loading="lazy" width="1200" height="800"></figure>
+        <figure class="ph g-a zoom" data-reveal="rise"><img src="../new/img/fellowship-meal.jpg" alt="Friends sharing a meal together" loading="lazy" width="1200" height="800"></figure>
+        <figure class="ph g-b zoom" data-reveal="expand"><img src="../new/img/bible-study.jpg" alt="An open Bible during a Bible study" loading="lazy" width="1200" height="795"></figure>
+      </div>
+      <div>
+        <p class="kicker rise">Connect</p>
+        <h2 class="h2 rise" style="--dl:.05s">Church gets personal in smaller groups</h2>
+        <ul class="glist">
+          <li class="gitem rise"><h3>Women's Bible Study</h3><p><b>Tuesdays 10:00–11:30 AM</b> · TIC Ministry Center, Dazhi</p><span class="tag in">In person</span></li>
+          <li class="gitem rise"><h3>Young Adult Men</h3><p><b>2nd &amp; 4th Tuesdays</b> · Online · ages 18–35</p><span class="tag on">Online</span></li>
+          <li class="gitem rise"><h3>Young Adults Bible Study</h3><p><b>Wednesdays 7:30–9:30 PM</b> · Dazhi · college age to mid-30s</p><span class="tag in">In person</span></li>
+          <li class="gitem rise"><h3>Community Bible Study</h3><p><b>Wednesdays 8:00–9:00 PM</b> · on Zoom · Matthew</p><span class="tag on">Online</span></li>
+          <li class="gitem rise"><h3>Men's Bible Study</h3><p><b>Wednesdays 8:30–9:30 PM</b> · on Zoom · Luke</p><span class="tag on">Online</span></li>
+          <li class="gitem rise"><h3>Friday Zoom Prayer</h3><p><b>Fridays 12:00–12:30 PM</b> · on Zoom</p><span class="tag on">Online</span></li>
+          <li class="gitem rise"><h3>Life Group</h3><p><b>Fridays 7:00–9:00 PM</b> · at a host's home</p><span class="tag in">In person</span></li>
+        </ul>
+        <div class="home-cta rise"><a class="btn btn--blue" href="#"><span class="txt">Find a group</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Serve (photo cards, hover) ───────────── -->
+  <section class="serve sec on-dark" id="serve">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><p class="kicker">Serve</p><h2 class="h2">Find your place to serve</h2></div>
+        <p class="lead rise" style="--dl:.1s">Practicing servanthood: following Jesus by serving others.</p>
+      </div>
+      <div class="acc" id="acc">
+        <div class="panel"><img src="../new/img/worship-band.jpg" alt="" loading="lazy"><span class="pv"><b>01</b>Worship team</span><span class="ph-body"><small>Serve with the</small><strong>Worship team</strong></span></div>
+        <div class="panel"><img src="../new/img/media-team.jpg" alt="" loading="lazy"><span class="pv"><b>02</b>Media &amp; technology</span><span class="ph-body"><small>Serve with</small><strong>Media &amp; technology</strong></span></div>
+        <div class="panel"><img src="../new/img/hospitality.jpg" alt="" loading="lazy"><span class="pv"><b>03</b>Hospitality</span><span class="ph-body"><small>Serve in</small><strong>Hospitality</strong></span></div>
+        <div class="panel"><img src="../new/img/kids-stage.jpg" alt="" loading="lazy"><span class="pv"><b>04</b>Kids ministry</span><span class="ph-body"><small>Serve in</small><strong>Kids ministry</strong></span></div>
+        <div class="panel"><img src="../new/img/filipino-ministry.jpg" alt="" loading="lazy"><span class="pv"><b>05</b>Filipino ministry</span><span class="ph-body"><small>Serve with the</small><strong>Filipino ministry</strong></span></div>
+      </div>
+      <div class="serve-foot">
+        <a class="btn" href="#"><span class="txt">Serve opportunities</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Stories ───────────── -->
+  <section class="stories sec" id="stories">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><p class="kicker">Stories</p><h2 class="h2">My life changed at TIC</h2></div>
+        <a class="btn btn--navy rise" style="--dl:.1s" href="#"><span class="txt">Listen now</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L13 8z"/></svg><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L13 8z"/></svg></span></a>
+      </div>
+      <div class="st-grid">
+        <div class="st-feature zoom-host" data-reveal="rise">
+          <figure class="ph"><img src="../new/img/christmas-team.jpg" alt="Members of the TIC church family together at Christmas" loading="lazy" width="1200" height="799"></figure>
+          <blockquote>Come as you are, but don't stay as you came.<cite>Expecting transformation</cite></blockquote>
+        </div>
+        <div class="st-cards">
+          <a class="story rise" href="#"><span class="meta">Testimony</span><h3>Surrendered</h3><p>Iquo Phillip shares about the loss of her son and how TIC became her family's home in Taiwan.</p><span class="listen"><i><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11L13.5 8z"/></svg></i>Listen now</span></a>
+          <a class="story rise" style="--dl:.06s" href="#"><span class="meta">Retreat 2025</span><h3>Make Room</h3><p>Our 2025 InterGen &amp; Young Adults retreat at Ting Tao Camp in Yilan.</p><span class="listen"><i><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11L13.5 8z"/></svg></i>Listen now</span></a>
+          <a class="story rise" href="#"><span class="meta">Missions</span><h3>Sent to the nations</h3><p>Mission trips to Madagascar and the Philippines.</p><span class="listen"><i><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11L13.5 8z"/></svg></i>Listen now</span></a>
+          <a class="story rise" style="--dl:.06s" href="#"><span class="meta">Testimony</span><h3>Dion</h3><p>Healed after eight years of pain from a sports injury.</p><span class="listen"><i><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11L13.5 8z"/></svg></i>Listen now</span></a>
+          <a class="story rise" href="#"><span class="meta">Testimony</span><h3>Mae</h3><p>Learned to depend completely on God through paralysis.</p><span class="listen"><i><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11L13.5 8z"/></svg></i>Listen now</span></a>
+          <a class="story rise" style="--dl:.06s" href="#"><span class="meta">Testimony</span><h3>Vivian</h3><p>Baptized in 2019 during cancer treatment.</p><span class="listen"><i><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11L13.5 8z"/></svg></i>Listen now</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Meet the team ───────────── -->
+  <section class="sec" id="team">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><p class="kicker">Our leaders</p><h2 class="h2">Meet the team</h2></div>
+        <p class="lead rise" style="--dl:.1s">Our pastoral staff, administrative staff and elders are a warm group of people who love God, love people and love life!</p>
+      </div>
+      <ul class="staff">
+        <li class="member rise"><figure class="ph zoom" data-reveal="rise"><img src="../new/img/team-brad.jpg" alt="Brad Warne" loading="lazy" width="360" height="360"></figure><h3>Brad Warne</h3><p>Pastor</p></li>
+        <li class="member rise" style="--dl:.06s"><figure class="ph zoom" data-reveal="rise"><img src="../new/img/team-jennifer.jpg" alt="Jennifer Cheng" loading="lazy" width="360" height="360"></figure><h3>Jennifer Cheng</h3><p>Executive Assistant</p></li>
+        <li class="member rise" style="--dl:.12s"><figure class="ph zoom" data-reveal="rise"><img src="../new/img/team-joe.jpg" alt="Joe C. Phanoella" loading="lazy" width="360" height="360"></figure><h3>Joe C. Phanoella</h3><p>Director of Media &amp; Technology</p></li>
+        <li class="member rise" style="--dl:.18s"><figure class="ph zoom" data-reveal="rise"><img src="../new/img/team-dior.jpg" alt="Diorella Yu de Leon" loading="lazy" width="360" height="360"></figure><h3>Diorella Yu de Leon</h3><p>Account Manager</p></li>
+        <li class="member rise" style="--dl:.24s"><figure class="ph zoom" data-reveal="rise"><img src="../new/img/team-vivian.jpg" alt="Vivian Hu" loading="lazy" width="360" height="360"></figure><h3>Vivian Hu</h3><p>Finance</p></li>
+      </ul>
+      <div class="elders rise">
+        <small>Elders &amp; treasurer</small>
+        <ul>
+          <li class="elder"><span class="ph zoom"><img src="../new/img/team-eric.jpg" alt="" loading="lazy" width="360" height="360"></span><div><b>Eric Lin</b><span>Chair of Elders</span></div></li>
+          <li class="elder"><span class="ph zoom"><img src="../new/img/team-annmarie.jpg" alt="" loading="lazy" width="360" height="360"></span><div><b>Ann-Marie Padgett</b><span>Elder</span></div></li>
+          <li class="elder"><span class="ph zoom"><img src="../new/img/team-alita.jpg" alt="" loading="lazy" width="360" height="360"></span><div><b>Alita Wang</b><span>Elder</span></div></li>
+          <li class="elder"><span class="ph zoom"><img src="../new/img/team-daniel.jpg" alt="" loading="lazy" width="360" height="360"></span><div><b>Daniel Teng</b><span>Elder</span></div></li>
+          <li class="elder"><span class="ph zoom"><img src="../new/img/team-jun.jpg" alt="" loading="lazy" width="360" height="360"></span><div><b>Jun Baldoz</b><span>Elder</span></div></li>
+          <li class="elder"><span class="ph zoom"><img src="../new/img/team-henry.jpg" alt="" loading="lazy" width="360" height="360"></span><div><b>Henry Liu</b><span>Treasurer</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Give & pray ───────────── -->
+  <section class="give sec" id="give">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><p class="kicker">Give &amp; pray</p><h2 class="h2">Partner with us</h2></div>
+      </div>
+      <div class="gp">
+        <div class="gcard g1 rise">
+          <h3>Give</h3>
+          <ul class="ways">
+            <li><i>1</i><div><b>Credit card</b><span>Give through our online giving page.</span></div></li>
+            <li><i>2</i><div><b>Bank transfer (TWD)</b><span>Transfer in Taiwan dollars.</span></div></li>
+            <li><i>3</i><div><b>Overseas wire</b><span>Email the last four digits of your account and the amount to <a href="mailto:giving@taipeichurch.org">giving@taipeichurch.org</a>.</span></div></li>
+          </ul>
+          <a class="btn btn--navy" href="#"><span class="txt">Online giving page</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+        </div>
+        <div class="gcard g2 rise" style="--dl:.1s">
+          <figure class="ph"><img src="../new/img/bible-study.jpg" alt="" loading="lazy" width="1200" height="795"></figure>
+          <h3>Pray with us</h3>
+          <ul class="ways">
+            <li><i>✉</i><div><b>Send a prayer request</b><span>Write to <a href="mailto:info@taipeichurch.org">info@taipeichurch.org</a>.</span></div></li>
+            <li><i>☏</i><div><b>Friday Zoom prayer</b><span>Fridays 12:00–12:30 PM.</span></div></li>
+            <li><i>☀</i><div><b>Daily LINE prayer group</b><span>Pray with the church family every day.</span></div></li>
+          </ul>
+          <a class="btn" href="mailto:info@taipeichurch.org"><span class="txt">Share a prayer request</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 13 3M5 3h8v8"/></svg></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ───────────── Footer ───────────── -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="logo" href="#top" aria-label="Back to top"><img src="../new/img/tic-logo.png" alt="TIC — Taipei International Church" width="1077" height="961" loading="lazy"></a>
+        <p><strong style="color:#fff">Taipei International Church</strong><br>A multicultural, multigenerational, English-speaking church. You belong here.</p>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <p>B1, No. 41, Aly. 7, Ln. 397, Mingshui Rd., Zhongshan Dist., Taipei City 10466</p>
+      </div>
+      <div>
+        <h4>Sundays</h4>
+        <ul><li>10:30 AM · in person in Dazhi</li><li>11:00 AM · online</li><li>11:20 AM · TIC Kids</li></ul>
+        <h4 style="margin-top:22px">Contact</h4>
+        <p><a href="mailto:info@taipeichurch.org">info@taipeichurch.org</a></p>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul class="social">
+          <li><a href="https://www.youtube.com/channel/UCb_DF4LVCX5aLkdkOqmkyjA" target="_blank" rel="noopener">YouTube ↗</a></li>
+          <li><a href="https://www.facebook.com/Taipei.Intl.Church/" target="_blank" rel="noopener">Facebook ↗</a></li>
+          <li><a href="https://www.instagram.com/tic_taipeichurch/" target="_blank" rel="noopener">Instagram ↗</a></li>
+          <li><a href="https://twitter.com/TIConlinechurch" target="_blank" rel="noopener">X ↗</a></li>
+          <li><a href="https://open.spotify.com/show/6KYo14ZcT2LvSujbNx273A" target="_blank" rel="noopener">Spotify ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© Taipei International Church · Since 1957</span>
+      <span class="credit">Design proposal by Páginas Clover</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const clamp01 = v => Math.min(1, Math.max(0, v));
+
+  /* ── Sticky header: transparent over the slideshow, solid navy after it ── */
+  const hdr = $('#hdr'), hero = $('#hero');
+  const header = () => hdr.classList.toggle('solid', scrollY > hero.offsetHeight - 90);
+
+  /* Mobile menu */
+  const mnav = $('#mnav'), menuBtn = $('#menuBtn');
+  const setMenu = open => {
+    mnav.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) $('#menuClose').focus(); else menuBtn.focus({ preventScroll: true });
+  };
+  menuBtn.onclick = () => setMenu(true);
+  $('#menuClose').onclick = () => setMenu(false);
+  $$('a', mnav).forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && mnav.classList.contains('open')) setMenu(false); });
+
+  /* ── Hero slideshow: cross-fade + slow Ken Burns zoom, marks, pause ── */
+  const slides = $$('.slide', hero), marks = $('#marks'), pp = $('#pp');
+  const WAIT = 6500;
+  let idx = 0, timer = 0, paused = reduce, visible = true;
+  const icons = { pause: '<svg viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="1" width="3.4" height="12" rx="1"/><rect x="8.6" y="1" width="3.4" height="12" rx="1"/></svg>', play: '<svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.2v11.6L12.6 7z"/></svg>' };
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', `Photo ${i + 1}: ${s.dataset.cap}`);
+    b.innerHTML = '<i></i>';
+    b.onclick = () => go(i);
+    marks.append(b);
+  });
+  const pad = n => String(n).padStart(2, '0');
+  function paint() {
+    [...marks.children].forEach((b, k) => b.setAttribute('aria-current', k === idx));
+    $('#capNum').textContent = `${pad(idx + 1)} / ${pad(slides.length)}`;
+    $('#capTxt').textContent = slides[idx].dataset.cap;
+    pp.innerHTML = paused ? icons.play : icons.pause;
+    pp.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
+    hero.classList.toggle('paused', paused || !visible);
+  }
+  function schedule() { clearTimeout(timer); if (!paused && visible) timer = setTimeout(() => go((idx + 1) % slides.length), WAIT); }
+  function go(n) {
+    if (n !== idx) {
+      const out = slides[idx];
+      slides.forEach(s => s.classList.remove('out'));
+      out.classList.add('out'); out.classList.remove('on');
+      idx = n;
+      slides[idx].classList.add('on');
+      setTimeout(() => { if (!out.classList.contains('on')) out.classList.remove('out'); }, 1900);
+    }
+    paint(); schedule();
+  }
+  pp.onclick = () => { paused = !paused; paint(); schedule(); };
+  // Save battery: stop when the hero is off-screen or the tab is hidden
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting && !document.hidden; paint(); schedule(); }).observe(hero);
+  document.addEventListener('visibilitychange', () => { visible = !document.hidden; paint(); schedule(); });
+  paint(); schedule();
+
+  /* ── Hero entrance: each block floats in once (Wix: Float In with delays) ── */
+  if (!reduce) {
+    const soft = 'cubic-bezier(.19, 1, .22, 1)';
+    ['#heroKicker', '.hero h1', '#heroSub', '#heroCta', '#heroLinks'].forEach((sel, i) => $(sel).animate(
+      { opacity: [0, 1], transform: ['translateY(24px)', 'none'] },
+      { duration: i === 1 ? 1200 : 1000, delay: [100, 250, 750, 900, 1050][i], easing: soft, fill: 'backwards' }));
+  }
+
+  /* ── Entrances played once on scroll-into-view: text Float In, strips Glide In ── */
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .14, rootMargin: '0px 0px -4% 0px' });
+  $$('.rise, .strips').forEach(el => io.observe(el));
+
+  /* ── Photos: Reveal (from the left / from below) or Expand In, once ──
+     The hidden first frame lives only inside the animation, so IntersectionObserver still sees the photo. */
+  const entrances = {
+    wipe: { kf: { clipPath: ['inset(0 100% 0 0 round 18px)', 'inset(0 0 0 0 round 18px)'] }, dur: 1250 },
+    rise: { kf: { clipPath: ['inset(100% 0 0 0 round 18px)', 'inset(0 0 0 0 round 18px)'] }, dur: 1150 },
+    expand: { kf: { opacity: [0, 1], transform: ['scale(.82)', 'none'] }, dur: 1000 }
+  };
+  const photoIO = new IntersectionObserver(entries => {
+    let k = 0;
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target, t = entrances[el.dataset.reveal];
+      photoIO.unobserve(el);
+      if (t) el.animate(t.kf, { duration: t.dur, delay: k++ * 120, easing: 'cubic-bezier(.76, 0, .24, 1)', fill: 'backwards' });
+    });
+  }, { threshold: 0 });
+  if (!reduce) $$('[data-reveal]').forEach(el => photoIO.observe(el));
+
+  /* ── Parallax background photos ("You belong here", numbers band) — Wix strip scroll effect: Parallax ── */
+  const plx = $$('.plx');
+  function parallax() {
+    const vh = innerHeight;
+    plx.forEach(w => {
+      const r = w.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const p = clamp01((vh - r.top) / (vh + r.height));
+      $$('.layer', w).forEach(l => { const v = parseFloat(l.style.getPropertyValue('--v')) || 0; l.style.transform = `translateY(${(v * (1 - 2 * p)).toFixed(1)}px)`; });
+    });
+  }
+
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; header(); if (!reduce) parallax(); });
+  }, { passive: true });
+  addEventListener('resize', () => { if (!reduce) parallax(); });
+  header();
+  if (!reduce) parallax();
+})();
+</script>
+</body>
+</html>
