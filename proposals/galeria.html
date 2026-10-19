@@ -1,0 +1,208 @@
+<meta charset="utf-8">
+<title>TIC Design Proposals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Galería de comparación: grilla de 2 columnas con vistas previas vivas; la tarjeta entera abre la propuesta */
+:root{
+  --bg:#eef0ec; --surface:#ffffff; --ink:#141714; --muted:#5b645c; --line:#d6dcd4;
+  --accent:#12804a; --accent-ink:#ffffff; --star:#c98a00; --pending:#e4e8e2; --ok:#12804a; --ok-bg:#e7f5ed; --warn:#9a5b00; --warn-bg:#fdf3e1; --no:#b42318; --no-bg:#fdecea;
+  --f-display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --f-body:"Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e110f; --surface:#161a17; --ink:#e7ece6; --muted:#98a39a; --line:#29302a;
+  --accent:#3ccf82; --accent-ink:#06210f; --star:#ffc53d; --pending:#1d221e; --ok:#3ccf82; --ok-bg:#10261a; --warn:#f5b54a; --warn-bg:#2a2010; --no:#ff7b6e; --no-bg:#2c1513; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e110f; --surface:#161a17; --ink:#e7ece6; --muted:#98a39a; --line:#29302a;
+  --accent:#3ccf82; --accent-ink:#06210f; --star:#ffc53d; --pending:#1d221e; --ok:#3ccf82; --ok-bg:#10261a; --warn:#f5b54a; --warn-bg:#2a2010; --no:#ff7b6e; --no-bg:#2c1513; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:28px 56px}
+header{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-end;justify-content:space-between;margin-bottom:26px}
+.brand{display:flex;gap:12px;align-items:center;margin-bottom:10px;color:var(--muted);font-weight:600;font-size:.86rem;letter-spacing:.06em;text-transform:uppercase}
+.brand img{width:26px;height:26px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,5vw,3.1rem);line-height:1;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:10px 0 0;max-width:56ch}
+.lead b{color:var(--ink)}
+.controls{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.controls span{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
+.seg button{border:0;background:none;color:var(--muted);font:600 .9rem var(--f-body);padding:8px 16px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible,.open:focus-visible,.fav:focus-visible,.shot:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.shot{display:block;position:relative;background:var(--pending);aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.mobile .shot{aspect-ratio:16/12}
+.frame{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
+.mobile .frame{left:50%;border-radius:22px;box-shadow:0 0 0 6px var(--ink)}
+.shot .go{position:absolute;right:12px;bottom:12px;background:var(--ink);color:var(--bg);font-weight:700;font-size:.82rem;padding:7px 12px;border-radius:999px;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s}
+.shot:hover .go,.shot:focus-visible .go{opacity:1;transform:none}
+.pending{display:grid;place-items:center;text-align:center;color:var(--muted);font-weight:600;padding:16px}
+.pending i{display:block;width:34px;height:34px;margin:0 auto 10px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.meta{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.top{display:flex;gap:10px;align-items:baseline}
+.num{font-family:var(--f-display);font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+h2{font-family:var(--f-display);font-weight:700;font-size:1.25rem;letter-spacing:-.02em;margin:0}
+.desc{color:var(--muted);margin:0;font-size:.93rem}
+.wix{border-radius:12px;padding:10px 12px;border:1px solid;font-size:.88rem;line-height:1.4}
+.wix b{display:flex;gap:8px;align-items:center;font-size:.95rem}
+.wix b::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor;flex:none}
+.wix p{margin:4px 0 0;color:var(--ink)}
+.wix.si{border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
+.wix.cambios{border-color:var(--warn);color:var(--warn);background:var(--warn-bg)}
+.wix.no{border-color:var(--no);color:var(--no);background:var(--no-bg)}
+.wixnote{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);max-width:70ch;font-size:.93rem}
+.actions{display:flex;gap:10px;align-items:center;margin-top:auto;padding-top:6px}
+.open{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none;padding:10px 16px;border-radius:12px}
+.open[aria-disabled="true"]{background:var(--pending);color:var(--muted);pointer-events:none}
+.fav{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:none;color:var(--ink);font:600 .9rem var(--f-body);padding:9px 14px;border-radius:12px;cursor:pointer}
+.fav svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2}
+.fav[aria-pressed="true"]{border-color:var(--star)}
+.fav[aria-pressed="true"] svg{fill:var(--star);stroke:var(--star)}
+.fav .c{color:var(--muted);font-variant-numeric:tabular-nums}
+.fav:disabled{opacity:.45;cursor:default}
+.note{margin-top:30px;color:var(--muted);font-size:.86rem;max-width:70ch}
+@media (prefers-reduced-motion: reduce){.pending i{animation:none}.shot .go{transition:none}}
+</style>
+
+<div class="wrap" id="app">
+  <header>
+    <div>
+      <div class="brand"><img src="../new/img/tic-logo.png" alt="">Taipei International Church</div>
+      <h1>Design proposals</h1>
+      <p class="lead"><b>5 of 5 ready.</b> Tap any proposal to open it in full, with all its effects. Star the ones you like most.</p>
+      <p class="wixnote"><b>All 5 can be used in Wix.</b> Every effect in these proposals is one that Wix offers in its own editor. Wix does not import pages built elsewhere, so the chosen design is rebuilt in the Wix Editor following the proposal, and it looks the same.</p>
+    </div>
+    <div class="controls">
+      <span>Preview</span>
+      <div class="seg" role="group" aria-label="Preview size">
+        <button type="button" id="vDesk" aria-pressed="true">Desktop</button>
+        <button type="button" id="vMob" aria-pressed="false">Mobile</button>
+      </div>
+    </div>
+  </header>
+  <div class="grid" id="grid"></div>
+  <p class="note" id="note">All of them use the real text and photos from taipeichurch.org. These are design samples: once the church picks one, the full website is built.</p>
+</div>
+
+<script>
+(function(){
+const ITEMS = [{"n": "01", "f": "01-faithful-refresh.html", "t": "Faithful refresh", "d": "Closest to today's site: same order, TIC blue and yellow, smooth versions of the current animations.", "w": "si", "wt": "Can be used in Wix", "wd": "Every effect uses Wix's own tools: entrance animations, sticky header, photo slider and hover glow. It is rebuilt in the Wix Editor and looks the same.", "ok": true}, {"n": "02", "f": "02-photo-welcome.html", "t": "Photo welcome", "d": "Full-screen slideshow of TIC worship photos with slow zoom, parallax photo strips.", "w": "si", "wt": "Can be used in Wix", "wd": "Every effect uses Wix's own tools: full-screen slideshow with slow zoom, parallax photos, Glide In entrances and hover zoom.", "ok": true}, {"n": "03", "f": "03-bright-clean.html", "t": "Bright & clean", "d": "White and light-blue, lots of space, cards, counters and a 'Your first Sunday' timeline.", "w": "si", "wt": "Can be used in Wix", "wd": "Adapted for Wix: the numbers and the 'Your first Sunday' timeline are shown ready-made and appear with Wix entrance animations.", "ok": true}, {"n": "04", "f": "04-church-family.html", "t": "Church family", "d": "People first: photo marquee, swipeable stories, team cards that flip, group filters.", "w": "si", "wt": "Can be used in Wix", "wd": "Adapted for Wix: auto-scrolling photo slider, swipeable stories, team photos that show the role on hover, and tabs for the groups.", "ok": true}, {"n": "05", "f": "05-shine-the-light.html", "t": "Shine the light", "d": "From TIC's vision: deep navy hero with soft light rays, yellow highlights.", "w": "si", "wt": "Can be used in Wix", "wd": "Adapted for Wix: the light rays are a still background, the headline fades in, and the header turns solid navy on scroll.", "ok": true}];
+const grid = document.getElementById("grid");
+const star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
+let mobile = false, myId = null, db = null, favs = new Set(), counts = {};
+
+try { (JSON.parse(localStorage.getItem("pc_favs") || "[]")).forEach(n => favs.add(n)); } catch (e) {}
+
+function card(it){
+  const el = document.createElement("article");
+  el.className = "card";
+  const shot = document.createElement(it.ok ? "a" : "div");
+  shot.className = "shot";
+  if (it.ok) {
+    shot.href = it.f; shot.target = "_blank"; shot.rel = "noopener";
+    shot.setAttribute("aria-label", "Open proposal " + it.n + ", " + it.t);
+    const fr = document.createElement("iframe");
+    fr.className = "frame"; fr.title = ""; fr.tabIndex = -1; fr.setAttribute("aria-hidden", "true"); fr.loading = "lazy";
+    fr.dataset.src = it.f;
+    shot.appendChild(fr);
+    const go = document.createElement("span"); go.className = "go"; go.textContent = "Open ↗"; shot.appendChild(go);
+  } else {
+    shot.classList.add("pending");
+    shot.innerHTML = "<div><i></i>In progress</div>";
+  }
+  const meta = document.createElement("div"); meta.className = "meta";
+  const top = document.createElement("div"); top.className = "top";
+  const num = document.createElement("span"); num.className = "num"; num.textContent = it.n;
+  const h = document.createElement("h2"); h.textContent = it.t;
+  top.append(num, h);
+  const d = document.createElement("p"); d.className = "desc"; d.textContent = it.d;
+  const act = document.createElement("div"); act.className = "actions";
+  const open = document.createElement("a"); open.className = "open"; open.textContent = it.ok ? "Open proposal ↗" : "Not yet";
+  if (it.ok) { open.href = it.f; open.target = "_blank"; open.rel = "noopener"; } else { open.setAttribute("aria-disabled", "true"); }
+  const fav = document.createElement("button"); fav.type = "button"; fav.className = "fav"; fav.dataset.n = it.n;
+  fav.innerHTML = star + '<span>Favorite</span><span class="c"></span>';
+  fav.disabled = !it.ok;
+  fav.addEventListener("click", () => toggle(it.n));
+  act.append(open, fav);
+  const w = document.createElement("div"); w.className = "wix " + it.w;
+  const wb = document.createElement("b"); wb.textContent = it.wt;
+  const wp = document.createElement("p"); wp.textContent = it.wd;
+  w.append(wb, wp);
+  meta.append(top, d, w, act);
+  el.append(shot, meta);
+  return el;
+}
+ITEMS.forEach(it => grid.appendChild(card(it)));
+
+// Vista previa viva: la página se dibuja a tamaño real (1280 o 390 px) y se achica al ancho de la tarjeta
+function fit(){
+  document.querySelectorAll(".shot .frame").forEach(fr => {
+    const box = fr.parentElement, W = mobile ? 390 : 1280, H = mobile ? 844 : 800;
+    const s = mobile ? box.clientHeight / H * 0.94 : box.clientWidth / W;
+    fr.style.width = W + "px"; fr.style.height = H + "px";
+    fr.style.transform = mobile ? "translate(-50%," + (box.clientHeight * 0.03) + "px) scale(" + s + ")" : "scale(" + s + ")";
+    fr.style.transformOrigin = mobile ? "50% 0" : "0 0";
+  });
+}
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { const fr = e.target.querySelector(".frame"); if (fr && !fr.src) fr.src = fr.dataset.src; io.unobserve(e.target); }
+}), { rootMargin: "300px" });
+document.querySelectorAll("a.shot").forEach(s => io.observe(s));
+new ResizeObserver(fit).observe(grid);
+function setView(m){
+  mobile = m; document.getElementById("app").classList.toggle("mobile", m);
+  document.getElementById("vDesk").setAttribute("aria-pressed", String(!m));
+  document.getElementById("vMob").setAttribute("aria-pressed", String(m));
+  fit();
+}
+document.getElementById("vDesk").addEventListener("click", () => setView(false));
+document.getElementById("vMob").addEventListener("click", () => setView(true));
+
+// Favoritas: compartidas entre quienes vean la galería (si se puede); si no, solo en este dispositivo
+function paint(){
+  document.querySelectorAll(".fav").forEach(b => {
+    const n = b.dataset.n, on = favs.has(n);
+    b.setAttribute("aria-pressed", String(on));
+    const c = counts[n] || 0;
+    b.querySelector(".c").textContent = c ? String(c) : "";
+    b.setAttribute("aria-label", (on ? "Remove from favorites " : "Mark as favorite ") + n + (c ? ", " + c + " vote" + (c > 1 ? "s" : "") : ""));
+  });
+}
+let saving = Promise.resolve();
+function toggle(n){
+  favs.has(n) ? favs.delete(n) : favs.add(n);
+  try { localStorage.setItem("pc_favs", JSON.stringify([...favs])); } catch (e) {}
+  if (!db || !myId) { paint(); return; }
+  paint();
+  const body = { favs: [...favs].sort(), t: Date.now() };
+  saving = saving.then(() => db.collection("votos").doc(myId).set(body)).catch(() => {});
+}
+paint();
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  const [d, u] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+  if (!d || !u) return;
+  const id = await u.id();
+  if (!id) return;
+  db = d; myId = id;
+  db.collection("votos").onSnapshot(snap => {
+    counts = {}; let mine = null;
+    snap.docs.forEach(doc => {
+      const v = doc.data(); const list = Array.isArray(v && v.favs) ? v.favs : [];
+      list.forEach(n => { if (typeof n === "string") counts[n] = (counts[n] || 0) + 1; });
+      if (doc.id === myId) mine = list;
+    });
+    if (mine) favs = new Set(mine.filter(n => typeof n === "string"));
+    else if (favs.size) saving = saving.then(() => db.collection("votos").doc(myId).set({ favs: [...favs].sort(), t: Date.now() })).catch(() => {});
+    paint();
+    document.getElementById("note").textContent = "Stars are added up across everyone who views this gallery. These are design samples with the real text and photos from taipeichurch.org.";
+  }, () => {});
+})();
+})();
+</script>
