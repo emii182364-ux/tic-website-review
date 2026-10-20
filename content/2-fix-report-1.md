@@ -6,16 +6,6 @@ taipeichurch.org  ·  September 27, 2026
 
 This report lists the safe fixes from the Website Review that were applied to a local copy of taipeichurch.org. The live website was not changed, and the layout and structure of every page stay exactly the same.
 
-The table tells you the page, what to look for, and what to change it to.
-
-| In this batch | Count |
-|---|---|
-| Text corrections | 15 on 6 pages, plus 1 image description and 1 email subject |
-| Link fixes | 2 Zoom buttons and 2 map links |
-| Page titles updated | 17 pages |
-| SEO descriptions added | 16 pages |
-| Total time in the Wix Editor | About 1 hour |
-
 ## 1. Text corrections
 
 In the Wix Editor, open the page, double-click the text box and edit the words.

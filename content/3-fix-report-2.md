@@ -10,7 +10,6 @@ Like Fix Report #1, these fixes were prepared on a local copy. The live website 
 | Google business information | 1 wrong address, 2 settings |
 | Page addresses to rename | 5 testimony pages |
 | Chinese (Traditional) draft | Menu, Home, Families, Giving and Contact |
-| Total time in Wix | About 1.5 hours, plus translation review |
 
 ## 1. Google business information (important)
 
