@@ -6,7 +6,7 @@ taipeichurch.org  ·  September 27, 2026
 
 This report lists the safe fixes from the Website Review that were applied to a local copy of taipeichurch.org. The live website was not changed, and the layout and structure of every page stay exactly the same.
 
-Wix does not accept edited HTML files, so each fix below has to be made by hand in the Wix Editor. The table tells you the page, what to look for, and what to change it to. Most fixes take less than a minute each.
+The table tells you the page, what to look for, and what to change it to.
 
 | In this batch | Count |
 |---|---|

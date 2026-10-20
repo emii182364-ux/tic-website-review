@@ -164,7 +164,7 @@ const cards = docs.map(d => `<li><a class="card" href="${d.slug}.html"><b>${esc(
 fs.writeFileSync(path.join(OUT, 'index.html'), page({
   title: 'Overview', current: '',
   body: `<article><p class="eyebrow">Taipei International Church</p><h1>taipeichurch.org website review</h1>
-<p>A review of taipeichurch.org with step-by-step fixes. Nothing here changes the live website: every fix is made by hand in the Wix Editor.</p>
+<p>A review of taipeichurch.org with step-by-step fixes. Nothing here changes the live website.</p>
 <h2>October 2026 updates</h2>
 <p>New reports from the Páginas Clover team after checking the live site again on 19–20 October 2026.</p>
 <ul>
@@ -188,9 +188,7 @@ fs.writeFileSync(path.join(OUT, 'index.html'), page({
 <p><a class="btn" href="proposals/galeria.html">Compare all 5 designs</a></p>
 <h2>Preview of the corrected website</h2>
 <p>A copy of taipeichurch.org with the fixes from Fix Reports #1 and #2 already applied (text, links, page titles, Google descriptions and image descriptions). The layout is unchanged. It is a preview only: the official website has not been changed.</p>
-<p><a class="btn" href="preview/index.html">Open the corrected preview</a> <a class="small" href="preview/CHANGES.txt">List of changes</a></p>
-<h2>How to update</h2>
-<ol><li>Edit the Markdown file in <code>content/</code> on GitHub (pencil icon).</li><li>Commit the change. The site and the Word documents rebuild automatically in about a minute.</li></ol></article>`,
+<p><a class="btn" href="preview/index.html">Open the corrected preview</a> <a class="small" href="preview/CHANGES.txt">List of changes</a></p></article>`,
 }));
 fs.copyFileSync(path.join(ROOT, 'scripts', 'style.css'), path.join(OUT, 'style.css'));
 fs.writeFileSync(path.join(OUT, 'robots.txt'), 'User-agent: *\nDisallow: /\n');

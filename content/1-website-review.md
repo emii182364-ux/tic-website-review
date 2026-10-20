@@ -119,18 +119,18 @@ Wix Multilingual is already turned on for taipeichurch.org, but English is the o
 - **Create a "Plan Your Visit" page.** Reuse the existing /visit page: what happens on a first Sunday, kids check-in, how to get there from Dazhi MRT, where to find the welcome table.
 - **Keep one source for schedules.** Connect a single Google Calendar and use it on Groups, Families and What's Happening, so times stop conflicting.
 - **Simplify the menu.** The menu currently has 17 items. Group them under Visit, About, Connect, Messages and Give.
-- **Improve mobile speed.** The homepage HTML alone is about 1.1 MB, so it loads slowly on phones. Compress images and remove unused sections.
+- **Improve mobile speed.** The homepage code alone is about 1.1 MB, so it loads slowly on phones. Compress images and remove unused sections.
 ## Suggested action plan
 
-| Priority | Task | Effort |
-|---|---|---|
-| 1 | Remove sample events; set up or hide Calendar | 15 minutes |
-| 1 | Replace the Mailchimp tracking links on Groups with direct links | 10 minutes |
-| 1 | Replace personal Gmail; fix old map link | 10 minutes |
-| 2 | Confirm and align Youth Service, Worship Circle and service times | 30 minutes |
-| 2 | Fix typos, page slugs and old pages | 1 hour |
-| 3 | SEO descriptions and image alt text | 2–3 hours |
-| 2 | Hide or repurpose the Log In button; remove unused apps | 30 minutes |
-| 3 | Add Traditional Chinese through Wix Multilingual (English stays default) | 1–2 days incl. review |
-| 3 | Plan Your Visit page and menu cleanup | 1 day |
+| Priority | Task |
+|---|---|
+| 1 | Remove sample events; set up or hide Calendar |
+| 1 | Replace the Mailchimp tracking links on Groups with direct links |
+| 1 | Replace personal Gmail; fix old map link |
+| 2 | Confirm and align Youth Service, Worship Circle and service times |
+| 2 | Fix typos, page slugs and old pages |
+| 3 | SEO descriptions and image alt text |
+| 2 | Hide or repurpose the Log In button; remove unused apps |
+| 3 | Add Traditional Chinese through Wix Multilingual (English stays default) |
+| 3 | Plan Your Visit page and menu cleanup |
 
