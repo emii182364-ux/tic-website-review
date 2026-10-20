@@ -67,6 +67,22 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
 .q{counter-reset:q;list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
 .q li{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:12px 16px;max-width:none}
+.answers{display:flex;flex-direction:column;gap:14px}
+.who{display:flex;flex-direction:column;gap:6px;font-weight:600;max-width:420px}
+.who input,.other,.summary{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
+.who input:focus-visible,.other:focus-visible,.summary:focus-visible,.copybtn:focus-visible,.opt input:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.qa{display:flex;flex-direction:column;gap:10px}
+.qq{display:flex;gap:10px;align-items:baseline;font-weight:600;margin:0}
+.qn{font-family:var(--f-mono);color:var(--blue);font-variant-numeric:tabular-nums}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:var(--bg);font-size:.95rem}
+.opt input{accent-color:var(--blue);margin:0}
+.opt:has(input:checked){border-color:var(--blue);background:var(--imp-bg)}
+.other{flex-basis:100%}
+.copybar{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.copybtn{font-family:var(--f-display);font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--yellow);color:#14222f;border:0;border-radius:6px;padding:12px 18px;cursor:pointer}
+.copystate{color:var(--muted);font-size:.92rem}
+.summary{font-family:var(--f-mono);font-size:.85rem}
 footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:6px}
 a{color:var(--blue)}
 a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
@@ -147,7 +163,7 @@ a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
       <ul class="items">
         <li>Two sample events from the Wix template are listed, with a San Francisco address.<span class="where">Event list</span></li>
         <li>The calendar page still shows "You are seconds away… connect Google Calendar" (never connected).<span class="where">TIC Calendar</span></li>
-        <li>Youth Service time: 11:00 am on one page, 10:30 am on another.<span class="where">Families, Groups</span></li>
+        <li>Youth Service time: the Families page says 11:00 am and the Groups page says 10:30 AM. We will make every page match the Sunday service at 10:30 AM.<span class="where">Families, Groups</span></li>
         <li>Worship Circle: "last Sunday 1:30 pm" on one page, "2:30–4:00 pm" on another.<span class="where">What's Happening, Groups</span></li>
         <li>The homepage banner says the online service is at 11:15 AM. The YouTube stream starts at 11:00 AM, so it should say 11:00 AM everywhere.<span class="where">Home</span></li>
         <li>Church age: "68 years old (2025)" and "65 years" on the same page.<span class="where">History</span></li>
@@ -232,17 +248,16 @@ a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 
   <section aria-labelledby="questions">
     <h2 id="questions">Please confirm</h2>
-    <p>We need your answers on these before we change them:</p>
-    <ol class="q">
-      <li>Youth Service: is it at 10:30 AM or 11:00 AM?</li>
-      <li>Worship Circle: what day and time is correct?</li>
-      <li>Women's Bible Study: TIC Ministry Center or TIC Worship Center?</li>
-      <li>Which email should replace the personal Gmail on the Groups page?</li>
-      <li>Can we remove the two sample events, the 2019 discussion guide, "The Light Project" and the Easter page, or hide them?</li>
-      <li>Do you still use TWIPLA, Web-Stat, 123FormBuilder, the Forum, ShoutOut or the Countdown app?</li>
-      <li>Is the Livestream page needed, or should the menu link straight to YouTube?</li>
-      <li>The church's age: 68 years in 2025 (founded October 1957)?</li>
-    </ol>
+    <p>We need your answers on these before we change them. Choose an answer, write your own with "Other", or choose "Next time" to leave it for later. Then copy your answers and paste them in your reply to us.</p>
+    <form class="answers" id="answers" novalidate>
+      <label class="who" for="who-name">Your name <input type="text" id="who-name" autocomplete="name"></label>
+      <ol class="q"><li class="qa" data-key="circle" data-label="Worship Circle"><p class="qq"><span class="qn">1</span>When does the Worship Circle meet?</p><div class="opts"><label class="opt"><input type="radio" name="q-circle" id="q-circle-0" value="Every Sunday, 2:30–4:00 PM"><span>Every Sunday, 2:30–4:00 PM</span></label><label class="opt"><input type="radio" name="q-circle" id="q-circle-1" value="Last Sunday of the month, 1:30 PM"><span>Last Sunday of the month, 1:30 PM</span></label><label class="opt"><input type="radio" name="q-circle" id="q-circle-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-circle" id="q-circle-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-circle-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Worship Circle" hidden></textarea></div></li><li class="qa" data-key="women" data-label="Women&#x27;s Bible Study venue"><p class="qq"><span class="qn">2</span>Where does the Women&#x27;s Bible Study meet?</p><div class="opts"><label class="opt"><input type="radio" name="q-women" id="q-women-0" value="TIC Ministry Center"><span>TIC Ministry Center</span></label><label class="opt"><input type="radio" name="q-women" id="q-women-1" value="TIC Worship Center"><span>TIC Worship Center</span></label><label class="opt"><input type="radio" name="q-women" id="q-women-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-women" id="q-women-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-women-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Women&#x27;s Bible Study venue" hidden></textarea></div></li><li class="qa" data-key="email" data-label="Contact email on the Groups page"><p class="qq"><span class="qn">3</span>Which email should replace the personal Gmail address?</p><div class="opts"><label class="opt"><input type="radio" name="q-email" id="q-email-0" value="info@taipeichurch.org"><span>info@taipeichurch.org</span></label><label class="opt"><input type="radio" name="q-email" id="q-email-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-email" id="q-email-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-email-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Contact email on the Groups page" hidden></textarea></div></li><li class="qa" data-key="old" data-label="Old pages"><p class="qq"><span class="qn">4</span>What should we do with the two sample events, the 2019 discussion guide, &quot;The Light Project&quot; and the Easter page?</p><div class="opts"><label class="opt"><input type="radio" name="q-old" id="q-old-0" value="Remove them"><span>Remove them</span></label><label class="opt"><input type="radio" name="q-old" id="q-old-1" value="Hide them from the site and Google"><span>Hide them from the site and Google</span></label><label class="opt"><input type="radio" name="q-old" id="q-old-2" value="Keep them as they are"><span>Keep them as they are</span></label><label class="opt"><input type="radio" name="q-old" id="q-old-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-old" id="q-old-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-old-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Old pages" hidden></textarea></div></li><li class="qa" data-key="apps" data-label="Apps"><p class="qq"><span class="qn">5</span>Do you still use TWIPLA, Web-Stat, 123FormBuilder, the Forum, ShoutOut or the Countdown app?</p><div class="opts"><label class="opt"><input type="radio" name="q-apps" id="q-apps-0" value="We don&#x27;t use any of them"><span>We don&#x27;t use any of them</span></label><label class="opt"><input type="radio" name="q-apps" id="q-apps-1" value="We still use all of them"><span>We still use all of them</span></label><label class="opt"><input type="radio" name="q-apps" id="q-apps-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-apps" id="q-apps-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-apps-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Apps" hidden></textarea></div></li><li class="qa" data-key="live" data-label="Livestream page"><p class="qq"><span class="qn">6</span>What should we do with the Livestream page?</p><div class="opts"><label class="opt"><input type="radio" name="q-live" id="q-live-0" value="Remove it and link the menu straight to YouTube"><span>Remove it and link the menu straight to YouTube</span></label><label class="opt"><input type="radio" name="q-live" id="q-live-1" value="Keep it and connect it to YouTube"><span>Keep it and connect it to YouTube</span></label><label class="opt"><input type="radio" name="q-live" id="q-live-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-live" id="q-live-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-live-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Livestream page" hidden></textarea></div></li><li class="qa" data-key="age" data-label="Church age"><p class="qq"><span class="qn">7</span>Is this correct: 68 years old in 2025 (founded October 1957)?</p><div class="opts"><label class="opt"><input type="radio" name="q-age" id="q-age-0" value="Yes, that&#x27;s correct"><span>Yes, that&#x27;s correct</span></label><label class="opt"><input type="radio" name="q-age" id="q-age-other" value="__other"><span>Other (please write)</span></label><label class="opt"><input type="radio" name="q-age" id="q-age-later" value="Next time (pending)"><span>Next time</span></label><textarea class="other" id="q-age-text" rows="2" placeholder="Write your answer" aria-label="Your answer for: Church age" hidden></textarea></div></li></ol>
+      <div class="copybar">
+        <button type="submit" class="copybtn" id="copy-answers">Copy my answers</button>
+        <span class="copystate" id="copy-state" role="status"></span>
+      </div>
+      <textarea id="answers-text" class="summary" rows="10" readonly aria-label="Your answers as text" hidden></textarea>
+    </form>
   </section>
 
   <footer>
@@ -250,6 +265,49 @@ a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
     <p>The Páginas Clover team</p>
   </footer>
 </div>
+
+<script>
+(function(){
+  var form=document.getElementById('answers');
+  if(!form) return;
+  var KEY='tic-answers-v1';
+  function save(){try{var d={};form.querySelectorAll('input,textarea').forEach(function(el){if(el.type==='radio'){if(el.checked)d[el.name]=el.value;}else if(el.id&&el.id!=='answers-text'){d[el.id]=el.value;}});localStorage.setItem(KEY,JSON.stringify(d));}catch(e){}}
+  function toggle(li){var other=li.querySelector('input[value="__other"]');var t=li.querySelector('.other');t.hidden=!(other&&other.checked);}
+  try{var d=JSON.parse(localStorage.getItem(KEY)||'{}');Object.keys(d).forEach(function(k){var r=form.querySelector('input[type=radio][name="'+k+'"][value="'+String(d[k]).replace(/"/g,'\\"')+'"]');if(r){r.checked=true;}else{var el=document.getElementById(k);if(el)el.value=d[k];}});}catch(e){}
+  form.querySelectorAll('.qa').forEach(toggle);
+  form.addEventListener('change',function(ev){var li=ev.target.closest('.qa');if(li)toggle(li);save();});
+  form.addEventListener('input',save);
+  function buildText(){
+    var lines=['Answers for the Páginas Clover team'];
+    var name=document.getElementById('who-name').value.trim();
+    if(name)lines.push('From: '+name);
+    lines.push('');
+    form.querySelectorAll('.qa').forEach(function(li,i){
+      var label=li.getAttribute('data-label');
+      var r=li.querySelector('input[type=radio]:checked');
+      var a;
+      if(!r){a='(no answer yet)';}
+      else if(r.value==='__other'){a=li.querySelector('.other').value.trim()||'(other, not written)';}
+      else{a=r.value;}
+      lines.push((i+1)+'. '+label+': '+a);
+    });
+    return lines.join('\n');
+  }
+  form.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var text=buildText();
+    var box=document.getElementById('answers-text');
+    var state=document.getElementById('copy-state');
+    box.value=text;box.hidden=false;
+    function fallback(){box.focus();box.select();state.textContent='Select the text below and copy it.';}
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){state.textContent='Copied. Paste it in your reply to us.';},fallback);
+      }else{fallback();}
+    }catch(e){fallback();}
+  });
+})();
+</script>
 
 </body>
 </html>
